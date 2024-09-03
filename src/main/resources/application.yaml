@@ -1,0 +1,27 @@
+# Database Connection Properties
+spring.datasource.url: ${DB_URL}
+spring.datasource.username: ${DB_USERNAME}
+spring.datasource.password: ${DB_PASSWORD}
+spring.datasource.driver-class-name: "org.postgresql.Driver"
+
+# JPA Properties
+spring.jpa.show-sql: true
+spring.jpa.hibernate.ddl-auto: update
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+
+# Logging Properties
+logging:
+  level:
+    org.hibernate.sql: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+
+# SpringBoot
+spring.output.ansi.enabled: ALWAYS
+
+# FEProperties
+fe.api.base.urlFirst: ""
+fe.api.base.urlSecond: ""

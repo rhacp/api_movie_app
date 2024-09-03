@@ -1,0 +1,29 @@
+services:
+  movie-app-api:
+    image: movie-app-api:latest
+    container_name: movie-app
+    depends_on:
+      - db
+      - movie-app-fe
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/movie_app_api
+      - DB_USERNAME=developer
+      - DB_PASSWORD=123456
+    ports:
+      - 8080:8080
+  db:
+    image: postgres:16
+    container_name: movieappdb
+    environment:
+      - POSTGRES_DB=movie_app_api
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=developer
+    ports:
+      - 8000:5432
+  movie-app-fe:
+    image: movie-app-fe:latest
+    container_name: movie-app-fe
+    environment:
+      - POSTGRES_DB=movie_app_api
+    ports:
+      - 3000:3000
