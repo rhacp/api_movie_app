@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", unique = true)
     private String title;
 
     @Column(name = "overview", columnDefinition = "varchar(1000)")
@@ -25,6 +26,9 @@ public class Movie {
 
     @Column(name = "poster_path")
     private String posterPath;
+
+    @Column(name = "movie_id")
+    private Long movieId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "search_index")

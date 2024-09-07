@@ -7,13 +7,19 @@ import com.rhacp.movie_app_api.models.entities.SearchIndex;
 import com.rhacp.movie_app_api.repositories.SearchIndexRepository;
 import com.rhacp.movie_app_api.services.movie.MovieService;
 import com.rhacp.movie_app_api.utils.properties.Properties;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 @Slf4j
 @Service
@@ -37,24 +43,44 @@ public class SearchIndexServiceImpl implements SearchIndexService {
         this.movieService = movieService;
     }
 
+    @Transactional
     @Override
-    public List<MovieDTO> getMovieList() {
-        List<Movie> movieList = makeCallToMoviesApi(properties.getMovieApiLink());
+    public List<MovieDTO> getMovieList(String keyword) {
         SearchIndex lastSearchIndex = searchIndexRepository.findFirstByOrderByIdDesc();
+        List<SearchIndex> retrievedSearchIndexList = searchIndexRepository.findByKeyword(keyword);
+        SearchIndex retrievedSearchIndex = new SearchIndex();
+        retrievedSearchIndex.setTime(LocalTime.now().withNano(0).minus(2, MINUTES));
 
-        if (lastSearchIndex == null || !movieService.compareListsIdentical(movieList, lastSearchIndex.getMovieList())) {
-            SearchIndex savedSearchIndex = searchIndexRepository.save(new SearchIndex(movieList));
+        if (!retrievedSearchIndexList.isEmpty()) {
+            retrievedSearchIndex = retrievedSearchIndexList.getLast();
+        }
+
+        System.out.println(retrievedSearchIndex.getId());
+
+        if (lastSearchIndex == null || retrievedSearchIndex == null || MINUTES.between(retrievedSearchIndex.getTime(), LocalTime.now()) > 1) {
+            List<Movie> movieList = new ArrayList<>();
+            if (keyword == null) {
+                movieList = makeCallToMoviesApi(properties.getMovieApiLink());
+            } else {
+                movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword);
+            }
+
+            SearchIndex savedSearchIndex = searchIndexRepository.save(new SearchIndex(
+                    LocalDate.now(),
+                    LocalTime.now().withNano(0),
+                    movieList, ((keyword != null) ? 1 : 0),
+                    keyword));
             log.info("SearchIndex {} inserted in db. Method: {}.", savedSearchIndex.getId(), "getMovieList");
 
-            movieService.assignSearchIndexAndSave(savedSearchIndex.getMovieList(), savedSearchIndex);
+            movieService.assignSearchIndex(savedSearchIndex.getMovieList(), savedSearchIndex);
 
             return savedSearchIndex.getMovieList().stream()
                     .map(movie -> modelMapper.map(movie, MovieDTO.class))
                     .toList();
         } else {
-            log.info("SearchIndex the same. Not inserting in db. Method {}.", "getMovieList");
+            log.warn("Keyword the same and not enough time passed to refresh. Not inserting searchIndex in db. Method {}.", "getMovieList");
 
-            return lastSearchIndex.getMovieList().stream()
+            return retrievedSearchIndex.getMovieList().stream()
                     .map(movie -> modelMapper.map(movie, MovieDTO.class))
                     .toList();
         }

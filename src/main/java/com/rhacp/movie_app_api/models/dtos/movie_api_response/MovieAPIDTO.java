@@ -17,6 +17,9 @@ public class MovieAPIDTO {
     @JsonProperty("genre_ids")
     private List<Integer> genreIds = new ArrayList<>();
 
+    @JsonProperty("id")
+    private Long movieId;
+
     @JsonProperty("original_language")
     private String originalLanguage;
 

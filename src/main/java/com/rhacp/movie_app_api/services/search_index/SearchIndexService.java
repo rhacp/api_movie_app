@@ -9,13 +9,16 @@ public interface SearchIndexService {
 
     /**
      * Returns the full movie list.
+     *
+     * @return Movie list.
      */
-    List<MovieDTO> getMovieList();
+    List<MovieDTO> getMovieList(String keyword);
 
     /**
      * Helper function that executes the call to the movie API to retrieve the movie list.
      *
      * @param url Movies API url.
+     * @return API movie list.
      */
     List<Movie> makeCallToMoviesApi(String url);
 }

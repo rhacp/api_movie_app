@@ -5,4 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
+    /**
+     * Query to retrieve movie by title from DB.
+     *
+     * @param title Title of the movie.
+     * @return Movie.
+     */
+    Movie findMovieByTitle(String title);
 }

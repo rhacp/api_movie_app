@@ -21,14 +21,20 @@ public class GlobalHandlerExceptions {
         exception.getBindingResult().getFieldErrors()
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
 
-        log.info("MethodArgumentNotValidException thrown from DTO validation.");
+        log.error("MethodArgumentNotValidException thrown from DTO validation.");
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ReviewNotFoundException.class)
-    public ResponseEntity<Object> handleReviewNotFoundException(ReviewNotFoundException exception) {
-        log.info("ReviewNotFoundException thrown");
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException exception) {
+        log.error("ResourceNotFoundException thrown.");
         return getResponse(exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceAlreadyExists.class)
+    public ResponseEntity<Object> handleResourceAlreadyExists(ResourceAlreadyExists exception) {
+        log.warn("ResourceAlreadyExists thrown.");
+        return getResponse(exception, HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException exception, HttpStatus httpStatus) {

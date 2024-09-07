@@ -4,6 +4,7 @@ import com.rhacp.movie_app_api.models.dtos.ReviewDTO;
 import com.rhacp.movie_app_api.models.entities.Review;
 import com.rhacp.movie_app_api.repositories.ReviewRepository;
 import com.rhacp.movie_app_api.utils.properties.Properties;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    @Transactional
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
         Review review = modelMapper.map(reviewDTO, Review.class);
