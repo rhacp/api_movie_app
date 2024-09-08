@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -25,6 +26,15 @@ public class GlobalHandlerExceptions {
         log.error("MethodArgumentNotValidException thrown from DTO validation.");
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler(RuntimeException.class)
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    public Map<String, String> handleCustomSignatureMismatch(CustomSignatureMismatch exception) {
+//        log.error("SignatureException thrown.");
+//        Map<String, String> result = new HashMap<>();
+//        result.put("message", exception.getMessage());
+//        return result;
+//    }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {

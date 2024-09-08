@@ -1,9 +1,6 @@
 package com.rhacp.movie_app_api.config;
 
-import com.rhacp.movie_app_api.models.dtos.movie_api_response.MovieAPIDTO;
-import com.rhacp.movie_app_api.models.entities.Movie;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
