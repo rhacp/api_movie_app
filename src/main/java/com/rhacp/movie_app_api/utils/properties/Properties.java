@@ -7,12 +7,24 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "fe.api")
-public class FEProperties {
+@ConfigurationProperties
+public class Properties {
 
     @Value("${fe.api.base.urlFirst}")
     private String feUrlFirst;
 
     @Value("${fe.api.base.urlSecond}")
     private String feUrlSecond;
+
+    @Value("${movie.api.link}")
+    private String movieApiLink;
+
+    @Value("${movie.img.path}")
+    private String movieImgPath;
+
+    @Value("${movie.api.seach}")
+    private String movieApiSearch;
+
+    @Value("${security.secret}")
+    private String secret;
 }

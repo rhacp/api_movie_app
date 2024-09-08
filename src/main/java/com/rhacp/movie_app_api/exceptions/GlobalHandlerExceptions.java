@@ -3,6 +3,7 @@ package com.rhacp.movie_app_api.exceptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,14 +22,26 @@ public class GlobalHandlerExceptions {
         exception.getBindingResult().getFieldErrors()
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
 
-        log.info("MethodArgumentNotValidException thrown from DTO validation.");
+        log.error("MethodArgumentNotValidException thrown from DTO validation.");
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ReviewNotFoundException.class)
-    public ResponseEntity<Object> handleReviewNotFoundException(ReviewNotFoundException exception) {
-        log.info("ReviewNotFoundException thrown");
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {
+        log.error("BadCredentialsException thrown.");
         return getResponse(exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException exception) {
+        log.error("ResourceNotFoundException thrown.");
+        return getResponse(exception, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceAlreadyExists.class)
+    public ResponseEntity<Object> handleResourceAlreadyExists(ResourceAlreadyExists exception) {
+        log.warn("ResourceAlreadyExists thrown.");
+        return getResponse(exception, HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException exception, HttpStatus httpStatus) {

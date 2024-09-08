@@ -1,8 +1,9 @@
 package com.rhacp.movie_app_api.services.review;
 
-import com.rhacp.movie_app_api.exceptions.ReviewNotFoundException;
+import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.entities.Review;
 import com.rhacp.movie_app_api.repositories.ReviewRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +17,12 @@ public class ReviewServiceValidationImpl implements ReviewServiceValidation {
         this.reviewRepository = reviewRepository;
     }
 
+    @Transactional
     @Override
     public Review getValidReview(Long reviewId, String methodName) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException("Review with the id " + reviewId + " not found."));
-        log.info("Review with the id {} retrieved. Method: {}", reviewId, methodName);
+                .orElseThrow(() -> new ResourceNotFoundException("Review with the id " + reviewId + " not found."));
+        log.error("Review with the id {} retrieved. Method: {}", reviewId, methodName);
 
         return review;
     }

@@ -7,5 +7,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
+    /**
+     * Query to retrieve review by id from DB.
+     *
+     * @param id Id of the movie.
+     * @return Review.
+     */
     Review findReviewById(Long id);
 }

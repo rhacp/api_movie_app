@@ -16,11 +16,23 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    /**
+     * POST endpoint to create review.
+     *
+     * @param reviewDTO Received review DTO.
+     * @return ResponseEntity.ok : ReviewDTO created.
+     */
     @PostMapping
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
         return ResponseEntity.ok(reviewService.createReview(reviewDTO));
     }
 
+    /**
+     * GET endpoint to retrieve review by id.
+     *
+     * @param reviewId Id of the review.
+     * @return ResponseEntity.ok : ReviewDTO retrieved.
+     */
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long reviewId) {
         return ResponseEntity.ok(reviewService.getReviewById(reviewId));
