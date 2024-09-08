@@ -48,14 +48,13 @@ public class SearchIndexServiceImpl implements SearchIndexService {
     public List<MovieDTO> getMovieList(String keyword) {
         SearchIndex lastSearchIndex = searchIndexRepository.findFirstByOrderByIdDesc();
         List<SearchIndex> retrievedSearchIndexList = searchIndexRepository.findByKeyword(keyword);
+
         SearchIndex retrievedSearchIndex = new SearchIndex();
-        retrievedSearchIndex.setTime(LocalTime.now().withNano(0).minus(2, MINUTES));
+        retrievedSearchIndex.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
 
         if (!retrievedSearchIndexList.isEmpty()) {
             retrievedSearchIndex = retrievedSearchIndexList.getLast();
         }
-
-        System.out.println(retrievedSearchIndex.getId());
 
         if (lastSearchIndex == null || retrievedSearchIndex == null || MINUTES.between(retrievedSearchIndex.getTime(), LocalTime.now()) > 1) {
             List<Movie> movieList = new ArrayList<>();
@@ -68,7 +67,8 @@ public class SearchIndexServiceImpl implements SearchIndexService {
             SearchIndex savedSearchIndex = searchIndexRepository.save(new SearchIndex(
                     LocalDate.now(),
                     LocalTime.now().withNano(0),
-                    movieList, ((keyword != null) ? 1 : 0),
+                    movieList,
+                    ((keyword != null) ? 1 : 0),
                     keyword));
             log.info("SearchIndex {} inserted in db. Method: {}.", savedSearchIndex.getId(), "getMovieList");
 

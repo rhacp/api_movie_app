@@ -24,16 +24,16 @@ public interface MovieService {
      */
     void assignSearchIndex(List<Movie> movieList, SearchIndex searchIndex);
 
-    void saveMovie(Movie movie);
+    void saveMovie(Movie movie, SearchIndex searchIndex);
 
-    /**
-     * Helper function that checks if the movie lists are the same besides the id and indexSearch.
-     *
-     * @param movieList First movie list.
-     * @param lastMovieList Second movie list.
-     * @return boolean value.
-     */
-    boolean compareListsIdentical(List<Movie> movieList, List<Movie> lastMovieList);
+//    /**
+//     * Helper function that checks if the movie lists are the same besides the id and indexSearch.
+//     *
+//     * @param movieList First movie list.
+//     * @param lastMovieList Second movie list.
+//     * @return boolean value.
+//     */
+//    boolean compareListsIdentical(List<Movie> movieList, List<Movie> lastMovieList);
 
-    void completeMovieListImagePath(List<Movie> movieList, String imagePath);
+//    void completeMovieListImagePath(List<Movie> movieList, String imagePath);
 }

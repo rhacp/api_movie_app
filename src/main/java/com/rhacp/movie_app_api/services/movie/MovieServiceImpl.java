@@ -37,12 +37,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void assignSearchIndex(List<Movie> movieList, SearchIndex searchIndex) {
         movieList.forEach(movie -> movie.setSearchIndex(searchIndex));
-        movieList.forEach(this::saveMovie);
+        movieList.forEach(movie -> this.saveMovie(movie, searchIndex));
     }
 
     @Transactional
     @Override
-    public void saveMovie(Movie movie) {
+    public void saveMovie(Movie movie, SearchIndex searchIndex) {
         Movie retrievedMovie = movieRepository.findMovieByTitle(movie.getTitle());
         if (retrievedMovie == null) {
             Movie savedMovie = movieRepository.save(movie);
@@ -53,26 +53,28 @@ public class MovieServiceImpl implements MovieService {
             movie.setOverview(retrievedMovie.getOverview());
             movie.setPosterPath(retrievedMovie.getPosterPath());
             movie.setMovieId(retrievedMovie.getMovieId());
+            movie.setSearchIndex(searchIndex);
+            movieRepository.save(movie);
         }
     }
 
-    @Override
-    public boolean compareListsIdentical(List<Movie> movieList, List<Movie> lastMovieList) {
-        if (movieList.isEmpty() || lastMovieList.isEmpty() || movieList.size() != lastMovieList.size()) {
-            return false;
-        }
+//    @Override
+//    public boolean compareListsIdentical(List<Movie> movieList, List<Movie> lastMovieList) {
+//        if (movieList.isEmpty() || lastMovieList.isEmpty() || movieList.size() != lastMovieList.size()) {
+//            return false;
+//        }
+//
+//        for (int i = 0; i < movieList.size(); i++) {
+//            if (!movieList.get(i).getMovieId().equals(lastMovieList.get(i).getMovieId())) {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+//    }
 
-        for (int i = 0; i < movieList.size(); i++) {
-            if (!movieList.get(i).getMovieId().equals(lastMovieList.get(i).getMovieId())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public void completeMovieListImagePath(List<Movie> movieList, String imagePath) {
-
-    }
+//    @Override
+//    public void completeMovieListImagePath(List<Movie> movieList, String imagePath) {
+//
+//    }
 }
