@@ -19,17 +19,4 @@ public class AppConfig {
         return WebClient.builder()
                 .build();
     }
-
-//    @Bean(name = "propertyMapper")
-//    public TypeMap<MovieAPIDTO, Movie> propertyMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        TypeMap<MovieAPIDTO, Movie> propertyMapper = modelMapper.createTypeMap(MovieAPIDTO.class, Movie.class);
-//        propertyMapper.addMapping(MovieAPIDTO::getMovieId, Movie::setMovieId);
-//        propertyMapper.addMapping(MovieAPIDTO::getTitle, Movie::setTitle);
-//        propertyMapper.addMapping(MovieAPIDTO::getOverview, Movie::setOverview);
-//        propertyMapper.addMapping(MovieAPIDTO::getPosterPath, Movie::setPosterPath);
-//        propertyMapper.addMapping(null, Movie::setId);
-//
-//        return propertyMapper;
-//    }
 }

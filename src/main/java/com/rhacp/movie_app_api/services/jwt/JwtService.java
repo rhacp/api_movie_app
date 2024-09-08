@@ -3,7 +3,6 @@ package com.rhacp.movie_app_api.services.jwt;
 import com.rhacp.movie_app_api.models.dtos.AuthRequestDTO;
 import com.rhacp.movie_app_api.models.dtos.JwtDTO;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;

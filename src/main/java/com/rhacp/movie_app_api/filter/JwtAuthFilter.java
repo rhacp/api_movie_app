@@ -1,33 +1,23 @@
 package com.rhacp.movie_app_api.filter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatch;
-import com.rhacp.movie_app_api.exceptions.GlobalHandlerExceptions;
 import com.rhacp.movie_app_api.services.jwt.JwtService;
 import com.rhacp.movie_app_api.services.user.UserService;
-import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -37,12 +27,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final UserService userService;
 
-    private final GlobalHandlerExceptions globalHandlerExceptions;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
-    public JwtAuthFilter(JwtService jwtService, UserService userService, GlobalHandlerExceptions globalHandlerExceptions) {
+    public JwtAuthFilter(JwtService jwtService, UserService userService, HandlerExceptionResolver handlerExceptionResolver) {
         this.jwtService = jwtService;
         this.userService = userService;
-        this.globalHandlerExceptions = globalHandlerExceptions;
+        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
@@ -59,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
             // Check if the header starts with "Bearer "
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            if (authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7); // Extract token
                 username = jwtService.extractUsername(token); // Extract username from token
             }
@@ -82,15 +72,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // Continue the filter chain
             filterChain.doFilter(request, response);
-        } catch (RuntimeException e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            log.error(e.getClass().getCanonicalName() + ": " + e.getMessage());
-
-//            Map<String, String> mapResponse = new HashMap<>();
-//            mapResponse.put("message", e.getMessage());
-
-            response.setContentType("application/json");
-            response.getWriter().write("{\n\"message\": \"Authentication header is missing or incorrect.\"\n}");
+        } catch (MalformedJwtException | CustomSignatureMismatch e) {
+            handlerExceptionResolver.resolveException(request, response, null, e);
         }
     }
 }

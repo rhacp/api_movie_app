@@ -57,7 +57,7 @@ public class SearchIndexServiceImpl implements SearchIndexService {
         }
 
         if (lastSearchIndex == null || retrievedSearchIndex == null || MINUTES.between(retrievedSearchIndex.getTime(), LocalTime.now()) > 1) {
-            List<Movie> movieList = new ArrayList<>();
+            List<Movie> movieList;
             if (keyword == null) {
                 movieList = makeCallToMoviesApi(properties.getMovieApiLink());
             } else {
