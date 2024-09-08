@@ -1,6 +1,5 @@
 package com.rhacp.movie_app_api.services.jwt;
 
-import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.dtos.AuthRequestDTO;
 import com.rhacp.movie_app_api.models.dtos.JwtDTO;
 import com.rhacp.movie_app_api.utils.properties.Properties;
@@ -11,7 +10,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
