@@ -2,9 +2,10 @@ package com.rhacp.movie_app_api.config;
 
 import com.rhacp.movie_app_api.filter.JwtAuthFilter;
 import com.rhacp.movie_app_api.repositories.UserRepository;
-import com.rhacp.movie_app_api.services.jwt.UserInfoService;
+import com.rhacp.movie_app_api.services.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,14 +29,14 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserRepository userRepository) {
+    public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter, UserRepository userRepository) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userRepository = userRepository;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserInfoService(userRepository, passwordEncoder()); // Ensure UserInfoService implements UserDetailsService
+        return new UserService(userRepository, passwordEncoder()); // Ensure UserInfoService implements UserDetailsService
     }
 
     @Bean
@@ -43,7 +44,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/welcome", "/api/v1/auth/addNewUser", "/api/v1/auth/generateToken").permitAll()
+                        .requestMatchers("/api/v1/auth/welcome", "/api/v1/auth/register", "/api/v1/auth/generateToken").permitAll()
                         .requestMatchers("/api/v1/auth/user/userProfile").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/auth/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/v1/searchindex").hasAuthority("ROLE_USER")

@@ -3,6 +3,7 @@ package com.rhacp.movie_app_api.exceptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,6 +24,12 @@ public class GlobalHandlerExceptions {
 
         log.error("MethodArgumentNotValidException thrown from DTO validation.");
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {
+        log.error("BadCredentialsException thrown.");
+        return getResponse(exception, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

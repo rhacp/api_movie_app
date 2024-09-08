@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 
 public class UserInfoDetails implements UserDetails {
 
-    private String username; // Changed from 'name' to 'username' for clarity
-    private String password;
-    private List<GrantedAuthority> authorities;
+    private final String username; // Changed from 'name' to 'username' for clarity
+    private final String password;
+    private final List<GrantedAuthority> authorities;
 
     public UserInfoDetails(User user) {
-        this.username = user.getName(); // Assuming 'name' is used as 'username'
+        this.username = user.getEmail(); // Assuming 'name' is used as 'username'
         this.password = user.getPassword();
         this.authorities = List.of(user.getRoles().split(","))
                 .stream()

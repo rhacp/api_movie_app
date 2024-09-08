@@ -22,7 +22,7 @@ public class ReviewServiceValidationImpl implements ReviewServiceValidation {
     public Review getValidReview(Long reviewId, String methodName) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review with the id " + reviewId + " not found."));
-        log.info("Review with the id {} retrieved. Method: {}", reviewId, methodName);
+        log.error("Review with the id {} retrieved. Method: {}", reviewId, methodName);
 
         return review;
     }

@@ -1,4 +1,4 @@
-package com.rhacp.movie_app_api.services.jwt;
+package com.rhacp.movie_app_api.services.user;
 
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.models.entities.user.UserInfoDetails;
@@ -12,23 +12,23 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserInfoService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserInfoService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userDetail = userRepository.findByEmail(username); // Assuming 'email' is used as username
+        Optional<User> user = userRepository.findByEmail(username); // Assuming 'email' is used as username
 
-        // Converting UserInfo to UserDetails
-        return userDetail.map(UserInfoDetails::new)
+        // Converting User to UserDetails
+        return user.map(UserInfoDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 

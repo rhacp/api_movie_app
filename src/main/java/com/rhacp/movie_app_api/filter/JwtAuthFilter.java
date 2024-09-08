@@ -1,12 +1,14 @@
 package com.rhacp.movie_app_api.filter;
 
 import com.rhacp.movie_app_api.services.jwt.JwtService;
-import com.rhacp.movie_app_api.services.jwt.UserInfoService;
+import com.rhacp.movie_app_api.services.jwt.JwtServiceImpl;
+import com.rhacp.movie_app_api.services.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +21,20 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtService jwtService;
+//    @Autowired
+//    private JwtService jwtService;
+//
+//    @Autowired
+//    private UserService userService;
 
-    @Autowired
-    private UserInfoService userDetailsService;
+    private final JwtService jwtService;
+
+    private final UserService userService;
+
+    public JwtAuthFilter(JwtService jwtService, UserService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,7 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // If the token is valid and no authentication is set in the context
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userService.loadUserByUsername(username);
 
             // Validate token and set authentication
             if (jwtService.validateToken(token, userDetails)) {
