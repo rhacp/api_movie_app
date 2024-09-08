@@ -57,24 +57,4 @@ public class MovieServiceImpl implements MovieService {
             movieRepository.save(movie);
         }
     }
-
-//    @Override
-//    public boolean compareListsIdentical(List<Movie> movieList, List<Movie> lastMovieList) {
-//        if (movieList.isEmpty() || lastMovieList.isEmpty() || movieList.size() != lastMovieList.size()) {
-//            return false;
-//        }
-//
-//        for (int i = 0; i < movieList.size(); i++) {
-//            if (!movieList.get(i).getMovieId().equals(lastMovieList.get(i).getMovieId())) {
-//                return false;
-//            }
-//        }
-//
-//        return true;
-//    }
-
-//    @Override
-//    public void completeMovieListImagePath(List<Movie> movieList, String imagePath) {
-//
-//    }
 }
