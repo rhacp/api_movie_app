@@ -2,7 +2,7 @@ package com.rhacp.movie_app_api.config;
 
 import com.rhacp.movie_app_api.filter.JwtAuthFilter;
 import com.rhacp.movie_app_api.repositories.UserRepository;
-import com.rhacp.movie_app_api.services.user.UserService;
+import com.rhacp.movie_app_api.services.user.UserServiceHelp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -36,7 +36,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserService(userRepository, passwordEncoder()); // Ensure UserInfoService implements UserDetailsService
+        return new UserServiceHelp(userRepository, passwordEncoder()); // Ensure UserInfoService implements UserDetailsService
     }
 
     @Bean
@@ -47,7 +47,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/welcome", "/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
                         .requestMatchers("/api/v1/auth/user/userProfile").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/auth/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/searchindex").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/searchIndex").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/reviews/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .sessionManagement(sess -> sess

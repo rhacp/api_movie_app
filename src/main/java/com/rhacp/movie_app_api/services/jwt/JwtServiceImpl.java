@@ -1,14 +1,14 @@
 package com.rhacp.movie_app_api.services.jwt;
 
+import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatchException;
+import com.rhacp.movie_app_api.exceptions.CustomExpiredTokenException;
 import com.rhacp.movie_app_api.models.dtos.AuthRequestDTO;
 import com.rhacp.movie_app_api.models.dtos.JwtDTO;
 import com.rhacp.movie_app_api.utils.properties.Properties;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,13 +23,13 @@ import java.util.function.Function;
 
 @Slf4j
 @Service
-public class JwtServiceImpl implements JwtService{
+public class JwtServiceImpl implements JwtService {
 
     private final Properties properties;
 
     private final AuthenticationManager authenticationManager;
 
-    public JwtServiceImpl(Properties properties,AuthenticationManager authenticationManager) {
+    public JwtServiceImpl(Properties properties, AuthenticationManager authenticationManager) {
         this.properties = properties;
         this.authenticationManager = authenticationManager;
     }
@@ -42,7 +42,7 @@ public class JwtServiceImpl implements JwtService{
 
     // Create a JWT token with specified claims and subject (user name)
     private JwtDTO createToken(Map<String, Object> claims, String userName) {
-        Date expiry = new Date (System.currentTimeMillis() + 1000 * 60 * 30);
+        Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * 30);
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
@@ -77,11 +77,17 @@ public class JwtServiceImpl implements JwtService{
 
     // Extract all claims from the token
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SignatureException e) {
+            throw new CustomSignatureMismatchException("Invalid token.");
+        } catch (ExpiredJwtException e) {
+            throw new CustomExpiredTokenException("Token has expired.");
+        }
     }
 
     // Check if the token is expired

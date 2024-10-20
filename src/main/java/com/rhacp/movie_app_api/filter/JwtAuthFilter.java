@@ -1,9 +1,9 @@
 package com.rhacp.movie_app_api.filter;
 
-import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatch;
+import com.rhacp.movie_app_api.exceptions.CustomExpiredTokenException;
+import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatchException;
 import com.rhacp.movie_app_api.services.jwt.JwtService;
-import com.rhacp.movie_app_api.services.user.UserService;
-import io.jsonwebtoken.MalformedJwtException;
+import com.rhacp.movie_app_api.services.user.UserServiceHelp;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,13 +25,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    private final UserService userService;
+    private final UserServiceHelp userServiceHelp;
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
-    public JwtAuthFilter(JwtService jwtService, UserService userService, HandlerExceptionResolver handlerExceptionResolver) {
+    public JwtAuthFilter(JwtService jwtService, UserServiceHelp userServiceHelp, HandlerExceptionResolver handlerExceptionResolver) {
         this.jwtService = jwtService;
-        this.userService = userService;
+        this.userServiceHelp = userServiceHelp;
         this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
@@ -44,19 +44,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader("Authorization");
 
             if (authHeader == null) {
-                throw new CustomSignatureMismatch("Authorization header is missing");
+                throw new CustomSignatureMismatchException("Authorization header is missing");
             }
 
-
             // Check if the header starts with "Bearer "
-            if (authHeader.startsWith("Bearer ")) {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7); // Extract token
                 username = jwtService.extractUsername(token); // Extract username from token
+            } else {
+                throw new CustomSignatureMismatchException("Authorization header not starting with \"Bearer \"");
             }
 
             // If the token is valid and no authentication is set in the context
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                UserDetails userDetails = userServiceHelp.loadUserByUsername(username);
 
                 // Validate token and set authentication
                 if (jwtService.validateToken(token, userDetails)) {
@@ -72,8 +73,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // Continue the filter chain
             filterChain.doFilter(request, response);
-        } catch (MalformedJwtException | CustomSignatureMismatch e) {
+//        } catch (MalformedJwtException | CustomSignatureMismatchException | UnsupportedJwtException | CustomExpiredTokenException e) {
+        } catch (CustomSignatureMismatchException | CustomExpiredTokenException e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
         }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.equals("/api/v1/auth/generateToken") || path.equals("/api/v1/users/register");
     }
 }
