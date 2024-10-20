@@ -1,6 +1,6 @@
 package com.rhacp.movie_app_api.services.movie;
 
-import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExists;
+import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.repositories.MovieRepository;
@@ -36,7 +36,7 @@ public class MovieServiceValidationImpl implements MovieServiceValidation {
         Movie foundMovie = movieRepository.findMovieByTitle(movie.getTitle());
 
         if (foundMovie == null) {
-            throw new ResourceAlreadyExists("Movie with the title \"" + movie.getTitle() + "\" already exists. Will not be saved in DB.");
+            throw new ResourceAlreadyExistsException("Movie with the title \"" + movie.getTitle() + "\" already exists. Will not be saved in DB.");
         }
 
         return movie;

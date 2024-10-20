@@ -2,6 +2,7 @@ package com.rhacp.movie_app_api.controllers;
 
 import com.rhacp.movie_app_api.models.dtos.ReviewDTO;
 import com.rhacp.movie_app_api.services.review.ReviewService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class ReviewController {
      * @return ResponseEntity.ok : ReviewDTO created.
      */
     @PostMapping
-    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
+    public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewDTO reviewDTO) {
         return ResponseEntity.ok(reviewService.createReview(reviewDTO));
     }
 

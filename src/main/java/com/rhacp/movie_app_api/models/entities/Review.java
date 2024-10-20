@@ -1,5 +1,7 @@
 package com.rhacp.movie_app_api.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.rhacp.movie_app_api.models.entities.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,8 +23,10 @@ public class Review {
     @Column(name = "movie_id")
     private Long movieId;
 
-    @Column(name = "requestor_user")
-    private String requestorUser;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference(value = "review")
+    private User user;
 
     @Column(name = "review_text")
     private String reviewText;

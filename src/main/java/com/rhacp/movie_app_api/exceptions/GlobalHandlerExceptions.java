@@ -1,6 +1,5 @@
 package com.rhacp.movie_app_api.exceptions;
 
-import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +26,22 @@ public class GlobalHandlerExceptions {
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<Object> handleSecurityException(MalformedJwtException exception) {
-        log.error("MalformedJwtException thrown: {}", exception.getMessage());
-        return getResponse(new RuntimeException("Authentication header is missing or incorrect."), HttpStatus.UNAUTHORIZED);
+//    @ExceptionHandler(MalformedJwtException.class)
+//    public ResponseEntity<Object> handleSecurityException(MalformedJwtException exception) {
+//        log.error("MalformedJwtException thrown: {}", exception.getMessage());
+//        return getResponse(new RuntimeException("Authentication header is missing or incorrect."), HttpStatus.UNAUTHORIZED);
+//    }
+
+    @ExceptionHandler(CustomSignatureMismatchException.class)
+    public ResponseEntity<Object> handleCustomSignatureMismatch(CustomSignatureMismatchException exception) {
+        log.error("CustomSignatureMismatch thrown: {}", exception.getMessage());
+        return getResponse(new RuntimeException(exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(CustomSignatureMismatch.class)
-    public ResponseEntity<Object> handleCustomSignatureMismatch(CustomSignatureMismatch exception) {
-        log.error("CustomSignatureMismatch thrown: {}", exception.getMessage());
-        return getResponse(new RuntimeException("Authentication header is missing or incorrect."), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(CustomExpiredTokenException.class)
+    public ResponseEntity<Object> handleCustomExpiredTokenException(CustomExpiredTokenException exception) {
+        log.error("ExpiredTokenException thrown: {}", exception.getMessage());
+        return getResponse(new RuntimeException("Token has expired."), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -51,8 +56,8 @@ public class GlobalHandlerExceptions {
         return getResponse(exception, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceAlreadyExists.class)
-    public ResponseEntity<Object> handleResourceAlreadyExists(ResourceAlreadyExists exception) {
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<Object> handleResourceAlreadyExists(ResourceAlreadyExistsException exception) {
         log.warn("ResourceAlreadyExists thrown.");
         return getResponse(exception, HttpStatus.CONFLICT);
     }

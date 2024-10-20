@@ -1,41 +1,39 @@
 package com.rhacp.movie_app_api.services.user;
 
-import com.rhacp.movie_app_api.models.entities.user.User;
-import com.rhacp.movie_app_api.models.entities.user.UserInfoDetails;
-import com.rhacp.movie_app_api.repositories.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import com.rhacp.movie_app_api.models.dtos.UserDTO;
 
-import java.util.Optional;
+import java.util.List;
 
-@Service
-public class UserService implements UserDetailsService {
+public interface UserService {
 
-    private final UserRepository userRepository;
+    /**
+     * Creates a user based on the given userDTO.
+     *
+     * @param userDTO Given userDTO.
+     * @return UserDTO of the saved user.
+     */
+    UserDTO createUser(UserDTO userDTO);
 
-    private final PasswordEncoder passwordEncoder;
+    /**
+     * Returns the list of all existing users.
+     *
+     * @return List of UserDTO.
+     */
+    List<UserDTO> getAllUsers();
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    /**
+     * Return a user based on id.
+     *
+     * @param userId User id to search for.
+     * @return UserDTO returned user DTO.
+     */
+    UserDTO getUserById(Long userId);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(username); // Assuming 'email' is used as username
-
-        // Converting User to UserDetails
-        return user.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-    }
-
-    public String addUser(User user) {
-        // Encode password before saving the user
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return "User Added Successfully";
-    }
+    /**
+     * Delete user by the given id.
+     *
+     * @param userId User id to delete.
+     * @return String message.
+     */
+    String deleteUserById(Long userId);
 }

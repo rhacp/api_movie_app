@@ -31,6 +31,6 @@ public class Movie {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "search_index")
-    @JsonBackReference(value = "movieList")
+    @JsonBackReference(value = "movies")
     private SearchIndex searchIndex;
 }
