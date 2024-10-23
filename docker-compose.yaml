@@ -20,10 +20,3 @@ services:
       - POSTGRES_USER=developer
     ports:
       - 8000:5432
-  movie-app-fe:
-    image: movie-app-fe:latest
-    container_name: movie-app-fe
-    environment:
-      - POSTGRES_DB=movie_app_api
-    ports:
-      - 3000:3000
