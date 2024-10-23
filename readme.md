@@ -1,4 +1,4 @@
-### Movie App
+# Movie App
 
 Java service structured as a RESTful API managing a movie library using Spring Boot, JWT, PostgreSQL, and integrating a public movies API
 
