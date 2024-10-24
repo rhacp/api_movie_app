@@ -27,34 +27,32 @@ public class MovieServiceImpl implements MovieService {
         this.modelMapper = modelMapper;
     }
 
-    @Override
-    public MovieDTO getMovieByTitle(String movieTitle) {
-        Movie movie = movieServiceValidation.getValidMovie(movieTitle, "getMovieByTitle");
-
+    public MovieDTO getMovieById(Long id) {
+        Movie movie = movieServiceValidation.getValidMovie(id, "getMovieById");
         return modelMapper.map(movie, MovieDTO.class);
     }
 
     @Override
     public void assignSearchIndex(List<Movie> movieList, SearchIndex searchIndex) {
         movieList.forEach(movie -> movie.setSearchIndex(searchIndex));
-        movieList.forEach(movie -> this.saveMovie(movie, searchIndex));
     }
 
     @Transactional
     @Override
-    public void saveMovie(Movie movie, SearchIndex searchIndex) {
-        Movie retrievedMovie = movieRepository.findMovieByTitle(movie.getTitle());
-        if (retrievedMovie == null) {
-            Movie savedMovie = movieRepository.save(movie);
-            movie.setId(savedMovie.getId());
-        } else {
-            movie.setId(retrievedMovie.getId());
-            movie.setTitle(retrievedMovie.getTitle());
-            movie.setOverview(retrievedMovie.getOverview());
-            movie.setPosterPath(retrievedMovie.getPosterPath());
-            movie.setMovieId(retrievedMovie.getMovieId());
-            movie.setSearchIndex(searchIndex);
-            movieRepository.save(movie);
-        }
+    public void saveMovieList(List<Movie> movieList) {
+        movieList.forEach(movie -> {
+            Movie retrievedMovie = movieRepository.findMovieByMovieId(movie.getMovieId());
+            if (retrievedMovie == null) {
+                Movie savedMovie = movieRepository.save(movie);
+                movie.setId(savedMovie.getId());
+            } else {
+                movie.setId(retrievedMovie.getId());
+                movie.setTitle(retrievedMovie.getTitle());
+                movie.setOverview(retrievedMovie.getOverview());
+                movie.setPosterPath(retrievedMovie.getPosterPath());
+                movie.setMovieId(retrievedMovie.getMovieId());
+                movieRepository.save(movie);
+            }
+        });
     }
 }

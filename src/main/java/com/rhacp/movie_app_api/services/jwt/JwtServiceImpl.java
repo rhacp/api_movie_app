@@ -34,15 +34,15 @@ public class JwtServiceImpl implements JwtService {
         this.authenticationManager = authenticationManager;
     }
 
-    // Generate token with given user name
+    // Generate token with given user name.
     public JwtDTO generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userName);
     }
 
-    // Create a JWT token with specified claims and subject (user name)
+    // Create a JWT token with specified claims and subject (username).
     private JwtDTO createToken(Map<String, Object> claims, String userName) {
-        Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * 30);
+        Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * properties.getTokenLifetime());
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
@@ -53,29 +53,29 @@ public class JwtServiceImpl implements JwtService {
         return new JwtDTO(jwtBuilder.compact(), new java.sql.Timestamp(expiry.getTime()).toLocalDateTime());
     }
 
-    // Get the signing key for JWT token
+    // Get the signing key for JWT token.
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Extract the username from the token
+    // Extract the username from the token.
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract the expiration date from the token
+    // Extract the expiration date from the token.
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Extract a claim from the token
+    // Extract a claim from the token.
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Extract all claims from the token
+    // Extract all claims from the token.
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
@@ -90,12 +90,12 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
-    // Check if the token is expired
+    // Check if the token is expired.
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    // Validate the token against user details and expiration
+    // Validate the token against user details and expiration.
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

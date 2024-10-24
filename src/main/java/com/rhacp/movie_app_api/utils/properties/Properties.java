@@ -27,4 +27,10 @@ public class Properties {
 
     @Value("${security.secret}")
     private String secret;
+
+    @Value("${retrieve.interval}")
+    private Integer retrieveInterval;
+
+    @Value("${token.lifetime.minutes}")
+    private Long tokenLifetime;
 }

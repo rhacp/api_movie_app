@@ -8,12 +8,12 @@ public interface MovieServiceValidation {
     /**
      * Search for a review with the specified id and returns it.
      *
-     * @param movieTitle Movie title to search for.
+     * @param id MovieId title to search for.
      * @param methodName Method name.
      * @return Movie found.
      * @throws ResourceNotFoundException if review not found.
      */
-    Movie getValidMovie(String movieTitle, String methodName);
+    Movie getValidMovie(Long id, String methodName);
 
     Movie validateMovieAlreadyExists(Movie movie);
 }
