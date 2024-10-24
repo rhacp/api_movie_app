@@ -25,3 +25,20 @@ spring.output.ansi.enabled: ALWAYS
 # FEProperties
 fe.api.base.urlFirst: ""
 fe.api.base.urlSecond: ""
+
+# Movie API
+movie.api.link: "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=1&api_key="
+movie.img.path: "https://image.tmdb.org/t/p/w1280"
+movie.api.seach: "https://api.themoviedb.org/3/search/movie?&api_key=14226c1621a7eff4fdd3c02a21fcee6f&query="
+movie.api.key: ""
+
+# Security
+spring.main.allow-circular-references: true
+spring.jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+security.secret: ""
+
+# App Config
+retrieve.interval: 1
+
+# JWT
+token.lifetime.minutes: 30

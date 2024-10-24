@@ -18,11 +18,11 @@ public class MovieController {
     /**
      * GET endpoint to retrieve movie by title.
      *
-     * @param movieTitle Title of the movie.
+     * @param id Id of the movie.
      * @return ResponseEntity.ok : MovieDTO retrieved.
      */
     @GetMapping
-    public ResponseEntity<MovieDTO> getMovieByTitle(@RequestParam String movieTitle) {
-        return ResponseEntity.ok(movieService.getMovieByTitle(movieTitle));
+    public ResponseEntity<MovieDTO> getMovieByTitle(@RequestParam Long id) {
+        return ResponseEntity.ok(movieService.getMovieById(id));
     }
 }

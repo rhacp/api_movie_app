@@ -47,8 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/welcome", "/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
                         .requestMatchers("/api/v1/auth/user/userProfile").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/auth/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/searchIndex").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/searchIndex/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/reviews/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/movie/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .sessionManagement(sess -> sess

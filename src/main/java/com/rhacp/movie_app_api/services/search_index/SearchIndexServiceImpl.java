@@ -16,9 +16,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.abs;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 @Slf4j
@@ -46,48 +46,54 @@ public class SearchIndexServiceImpl implements SearchIndexService {
     @Transactional
     @Override
     public List<MovieDTO> getMovieList(String keyword) {
-        SearchIndex lastSearchIndex = searchIndexRepository.findFirstByOrderByIdDesc();
-        List<SearchIndex> retrievedSearchIndexList = searchIndexRepository.findByKeyword(keyword);
+        // Get last SearchIndex list by keyword.
+        List<SearchIndex> searchIndexListByKeyword = searchIndexRepository.findByKeyword(keyword);
 
-        SearchIndex retrievedSearchIndex = new SearchIndex();
-        retrievedSearchIndex.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
+        // Initialize last SearchIndex by Keyword.
+        SearchIndex lastSearchIndexByKeyword = new SearchIndex();
+        if (!searchIndexListByKeyword.isEmpty()) {
+            lastSearchIndexByKeyword = searchIndexListByKeyword.getLast();
+        }
+        lastSearchIndexByKeyword.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
 
-        if (!retrievedSearchIndexList.isEmpty()) {
-            retrievedSearchIndex = retrievedSearchIndexList.getLast();
+        // Check if enough time passed.
+        if (abs(MINUTES.between(lastSearchIndexByKeyword.getTime(), LocalTime.now())) < properties.getRetrieveInterval()) {
+            return returnLastMovieList(lastSearchIndexByKeyword);
         }
 
-        if (lastSearchIndex == null || retrievedSearchIndex == null || MINUTES.between(retrievedSearchIndex.getTime(), LocalTime.now()) > 1) {
-            List<Movie> movieList;
-            if (keyword == null) {
-                movieList = makeCallToMoviesApi(properties.getMovieApiLink());
-            } else {
-                movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword);
-            }
-
-            SearchIndex savedSearchIndex = searchIndexRepository.save(new SearchIndex(
-                    LocalDate.now(),
-                    LocalTime.now().withNano(0),
-                    movieList,
-                    ((keyword != null) ? 1 : 0),
-                    keyword));
-            log.info("SearchIndex {} inserted in db. Method: {}.", savedSearchIndex.getId(), "getMovieList");
-
-            movieService.assignSearchIndex(savedSearchIndex.getMovieList(), savedSearchIndex);
-
-            return savedSearchIndex.getMovieList().stream()
-                    .map(movie -> modelMapper.map(movie, MovieDTO.class))
-                    .toList();
+        // Retrieve movie list.
+        List<Movie> movieList;
+        if (keyword == null) {
+            movieList = makeCallToMoviesApi(properties.getMovieApiLink());
         } else {
-            log.warn("Keyword the same and not enough time passed to refresh. Not inserting searchIndex in db. Method {}.", "getMovieList");
-
-            return retrievedSearchIndex.getMovieList().stream()
-                    .map(movie -> modelMapper.map(movie, MovieDTO.class))
-                    .toList();
+            movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword);
         }
+
+        // Create and save new SearchIndex.
+        SearchIndex savedSearchIndex = searchIndexRepository.save(new SearchIndex(
+                LocalDate.now(),
+                LocalTime.now().withNano(0),
+                movieList,
+                ((keyword != null) ? 1 : 0),
+                keyword));
+        log.info("SearchIndex {} inserted in db. Method: {}.", savedSearchIndex.getId(), "getMovieList");
+
+        // Save movies/ update existing ones with new SearchIndex id.
+        movieService.assignSearchIndex(savedSearchIndex.getMovieList(), savedSearchIndex);
+        movieService.saveMovieList(savedSearchIndex.getMovieList());
+
+        return savedSearchIndex.getMovieList().stream()
+                .map(movie -> modelMapper.map(movie, MovieDTO.class))
+                .toList();
     }
 
-    @Override
-    public List<Movie> makeCallToMoviesApi(String url) {
+    /**
+     * Helper function that executes the call to the movie API to retrieve the movie list.
+     *
+     * @param url Movies API url.
+     * @return API movie list.
+     */
+    private List<Movie> makeCallToMoviesApi(String url) {
         MovieAPIResponseDTO movieAPIResponseDTOMono = webClient.get()
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
@@ -97,6 +103,14 @@ public class SearchIndexServiceImpl implements SearchIndexService {
 
         return movieAPIResponseDTOMono.getResults().stream()
                 .map(movie -> modelMapper.map(movie, Movie.class))
+                .toList();
+    }
+
+    private List<MovieDTO> returnLastMovieList(SearchIndex retrievedSearchIndex) {
+        log.warn("Keyword the same and not enough time passed to refresh. Not inserting searchIndex in db. Method {}.", "getMovieList");
+
+        return retrievedSearchIndex.getMovieList().stream()
+                .map(movie -> modelMapper.map(movie, MovieDTO.class))
                 .toList();
     }
 }

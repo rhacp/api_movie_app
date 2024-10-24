@@ -9,12 +9,12 @@ import java.util.List;
 public interface MovieService {
 
     /**
-     * Return a review based on the given id.
+     * Return a movie based on the given id.
      *
-     * @param movieTitle Movie title to search for.
+     * @param id MovieId to search for.
      * @return ReviewDTO with the specified id.
      */
-    MovieDTO getMovieByTitle(String movieTitle);
+    MovieDTO getMovieById(Long id);
 
     /**
      * Helper function that assigns the given indexSearch to all movies in the list and saves them in db.
@@ -24,5 +24,5 @@ public interface MovieService {
      */
     void assignSearchIndex(List<Movie> movieList, SearchIndex searchIndex);
 
-    void saveMovie(Movie movie, SearchIndex searchIndex);
+    void saveMovieList(List<Movie> movieList);
 }

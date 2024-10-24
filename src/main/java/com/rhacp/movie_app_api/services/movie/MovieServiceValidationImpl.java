@@ -20,23 +20,23 @@ public class MovieServiceValidationImpl implements MovieServiceValidation {
 
     @Transactional
     @Override
-    public Movie getValidMovie(String movieTitle, String methodName) {
-        Movie movie = movieRepository.findMovieByTitle(movieTitle);
+    public Movie getValidMovie(Long id, String methodName) {
+        Movie movie = movieRepository.findMovieById(id);
 
         if (movie == null) {
-            throw new ResourceNotFoundException("Movie with the title \"" + movieTitle + "\" not found.");
+            throw new ResourceNotFoundException("Movie with the id \"" + id + "\" not found.");
         }
-        log.info("Movie with the title {} retrieved. Method: {}", movieTitle, methodName);
+        log.info("Movie with the title {} retrieved. Method: {}", id, methodName);
 
         return movie;
     }
 
     @Override
     public Movie validateMovieAlreadyExists(Movie movie) {
-        Movie foundMovie = movieRepository.findMovieByTitle(movie.getTitle());
+        Movie foundMovie = movieRepository.findMovieById(movie.getId());
 
         if (foundMovie == null) {
-            throw new ResourceAlreadyExistsException("Movie with the title \"" + movie.getTitle() + "\" already exists. Will not be saved in DB.");
+            throw new ResourceAlreadyExistsException("Movie with the title \"" + movie.getId() + "\" already exists. Will not be saved in DB.");
         }
 
         return movie;
