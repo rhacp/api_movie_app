@@ -1,4 +1,4 @@
-package com.rhacp.movie_app_api.filter;
+package com.rhacp.movie_app_api.filters;
 
 import com.rhacp.movie_app_api.exceptions.CustomExpiredTokenException;
 import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatchException;

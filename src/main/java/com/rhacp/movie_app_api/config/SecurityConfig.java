@@ -1,6 +1,6 @@
 package com.rhacp.movie_app_api.config;
 
-import com.rhacp.movie_app_api.filter.JwtAuthFilter;
+import com.rhacp.movie_app_api.filters.JwtAuthFilter;
 import com.rhacp.movie_app_api.repositories.UserRepository;
 import com.rhacp.movie_app_api.services.user.UserServiceHelp;
 import org.springframework.context.annotation.Bean;
