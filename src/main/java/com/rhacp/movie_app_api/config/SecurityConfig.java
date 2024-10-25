@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/searchIndex/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/reviews/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/movie/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/movieList/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .sessionManagement(sess -> sess

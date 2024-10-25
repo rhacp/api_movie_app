@@ -66,7 +66,7 @@ public class SearchIndexServiceImpl implements SearchIndexService {
         if (keyword == null) {
             movieList = makeCallToMoviesApi(properties.getMovieApiLink() + properties.getMovieApiKey());
         } else {
-            movieList = makeCallToMoviesApi(properties.getMovieApiLink() + properties.getMovieApiKey() + keyword);
+            movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword);
         }
 
         // Create and save new SearchIndex.

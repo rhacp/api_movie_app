@@ -43,5 +43,5 @@ public class MovieList {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonBackReference(value = "listMovieList")
-    private User userMovie;
+    private User userMovieList;
 }

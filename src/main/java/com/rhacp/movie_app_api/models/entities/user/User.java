@@ -38,7 +38,7 @@ public class User {
     @JsonManagedReference(value = "review")
     private List<Review> reviewList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userMovies")
+    @OneToMany(mappedBy = "userMovieList")
     @JsonManagedReference(value = "listMovieList")
     private List<MovieList> listMovieList = new ArrayList<>();
 }
