@@ -25,5 +25,5 @@ public interface JwtService {
     // Validate the token against user details and expiration
     Boolean validateToken(String token, UserDetails userDetails);
 
-    public JwtDTO authenticateAndGetToken(AuthRequestDTO authRequestDTO);
+    JwtDTO authenticateAndGetToken(AuthRequestDTO authRequestDTO);
 }

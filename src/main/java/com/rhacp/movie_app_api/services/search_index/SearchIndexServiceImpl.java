@@ -51,10 +51,10 @@ public class SearchIndexServiceImpl implements SearchIndexService {
 
         // Initialize last SearchIndex by Keyword.
         SearchIndex lastSearchIndexByKeyword = new SearchIndex();
+        lastSearchIndexByKeyword.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
         if (!searchIndexListByKeyword.isEmpty()) {
             lastSearchIndexByKeyword = searchIndexListByKeyword.getLast();
         }
-        lastSearchIndexByKeyword.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
 
         // Check if enough time passed.
         if (abs(MINUTES.between(lastSearchIndexByKeyword.getTime(), LocalTime.now())) < properties.getRetrieveInterval()) {
@@ -64,7 +64,7 @@ public class SearchIndexServiceImpl implements SearchIndexService {
         // Retrieve movie list.
         List<Movie> movieList;
         if (keyword == null) {
-            movieList = makeCallToMoviesApi(properties.getMovieApiLink());
+            movieList = makeCallToMoviesApi(properties.getMovieApiLink() + properties.getMovieApiKey());
         } else {
             movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword);
         }

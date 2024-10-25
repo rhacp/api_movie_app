@@ -25,6 +25,9 @@ public class Properties {
     @Value("${movie.api.seach}")
     private String movieApiSearch;
 
+    @Value("${movie.api.key}")
+    private String movieApiKey;
+
     @Value("${security.secret}")
     private String secret;
 

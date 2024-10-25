@@ -35,7 +35,7 @@ public class SearchIndex {
     private String keyword;
 
     @OneToMany(mappedBy = "searchIndex")
-    @JsonManagedReference(value = "movies")
+    @JsonManagedReference(value = "searchIndexMovies")
     private List<Movie> movieList = new ArrayList<>();
 
     public SearchIndex(LocalDate date, LocalTime time, List<Movie> movieList, Integer search, String keyword) {
