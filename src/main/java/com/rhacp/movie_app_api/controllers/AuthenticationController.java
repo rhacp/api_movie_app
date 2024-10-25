@@ -4,6 +4,7 @@ import com.rhacp.movie_app_api.models.dtos.AuthRequestDTO;
 import com.rhacp.movie_app_api.models.dtos.JwtDTO;
 import com.rhacp.movie_app_api.services.jwt.JwtService;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/generateToken")
-    public ResponseEntity<JwtDTO> authenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO) {
+    public ResponseEntity<JwtDTO> authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(jwtService.authenticateAndGetToken(authRequestDTO));
     }
 }

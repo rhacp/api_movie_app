@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.models.entities.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
@@ -33,7 +34,11 @@ public class User {
     @Column(name = "roles")
     private String roles;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userReview")
     @JsonManagedReference(value = "review")
     private List<Review> reviewList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userMovies")
+    @JsonManagedReference(value = "listMovieList")
+    private List<MovieList> listMovieList = new ArrayList<>();
 }

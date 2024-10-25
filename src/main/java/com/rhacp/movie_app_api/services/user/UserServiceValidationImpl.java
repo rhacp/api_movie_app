@@ -5,6 +5,7 @@ import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.dtos.UserDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
+import com.rhacp.movie_app_api.services.jwt.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,11 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     private final UserRepository userRepository;
 
-    public UserServiceValidationImpl(UserRepository userRepository) {
+    private final JwtService jwtService;
+
+    public UserServiceValidationImpl(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -31,11 +35,16 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     @Transactional
     @Override
-    public User getValidUser(Long userId, String methodName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
-        log.info("User with id {} retrieved. Method: {}", userId, methodName);
+    public User getValidUser(String token, String methodName) {
+        String email = jwtService.extractUsername(token); // Extract username from token
 
-        return user;
+        User userFound = userRepository.findUserByEmail(email);
+        if (userFound == null) {
+            throw new ResourceNotFoundException("User with email " + email + " not found");
+        }
+
+        log.info("User with email {} retrieved. Method: {}", email, methodName);
+
+        return userFound;
     }
 }

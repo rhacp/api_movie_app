@@ -23,14 +23,14 @@ public class Review {
     @Column(name = "movie_id")
     private Long movieId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "review")
-    private User user;
-
     @Column(name = "review_text")
     private String reviewText;
 
     @Column(name = "date_time", unique = true)
     private LocalDateTime dateTime;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference(value = "review")
+    private User userReview;
 }
