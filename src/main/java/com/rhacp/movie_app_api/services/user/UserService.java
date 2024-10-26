@@ -36,4 +36,6 @@ public interface UserService {
      * @return String message.
      */
     String deleteUserById(Long userId);
+
+    UserDTO updateUserById(Long userId, UserDTO userDTO);
 }

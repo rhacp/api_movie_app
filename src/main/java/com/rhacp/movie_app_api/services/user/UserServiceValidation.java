@@ -14,10 +14,19 @@ public interface UserServiceValidation {
 
     /**
      * Search for a user with the specified id and returns it.
+     * @param userId Id to check for.
+     * @param methodName methodName.
+     * @return User found user.
+     * @exception ResourceNotFoundException If user not found.
+     */
+    User getValidUser(Long userId, String methodName);
+
+    /**
+     * Search for a user with the specified id and returns it.
      * @param email Email to check for.
      * @param methodName methodName.
      * @return User found user.
      * @exception ResourceNotFoundException If user not found.
      */
-    User getValidUser(String email, String methodName);
+    User getValidUserByToken(String email, String methodName);
 }

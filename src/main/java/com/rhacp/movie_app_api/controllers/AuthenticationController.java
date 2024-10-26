@@ -18,11 +18,6 @@ public class AuthenticationController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping("/welcome")
-    public String welcome() {
-        return "Welcome this endpoint is not secure";
-    }
-
     @PostMapping("/generateToken")
     public ResponseEntity<JwtDTO> authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(jwtService.authenticateAndGetToken(authRequestDTO));
