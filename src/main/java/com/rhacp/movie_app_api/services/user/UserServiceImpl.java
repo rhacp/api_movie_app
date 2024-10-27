@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.services.user;
 
-import com.rhacp.movie_app_api.models.dtos.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUserById(Long userId, UserDTO userDTO) {
+    public UserDTO updateUserById(Long userId, UserUpdateDTO userDTO) {
         User userFound = userServiceValidation.getValidUser(userId, "updateUser");
 
         updateUserFromDTO(userFound, userDTO);
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
      * @param user Existing user.
      * @param userDTO Update DTO.
      */
-    private void updateUserFromDTO(User user, UserDTO userDTO) {
+    private void updateUserFromDTO(User user, UserUpdateDTO userDTO) {
         if (userDTO.getName() != null) {
             user.setName(userDTO.getName());
         }

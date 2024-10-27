@@ -2,7 +2,7 @@ package com.rhacp.movie_app_api.services.user;
 
 import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
-import com.rhacp.movie_app_api.models.dtos.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
 import com.rhacp.movie_app_api.services.jwt.JwtService;

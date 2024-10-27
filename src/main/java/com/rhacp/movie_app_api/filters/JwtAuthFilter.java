@@ -61,19 +61,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 // Validate token and set authentication
                 if (jwtService.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    try {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
             }
 
             // Continue the filter chain
             filterChain.doFilter(request, response);
-//        } catch (MalformedJwtException | CustomSignatureMismatchException | UnsupportedJwtException | CustomExpiredTokenException e) {
         } catch (CustomSignatureMismatchException | CustomExpiredTokenException e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
         }

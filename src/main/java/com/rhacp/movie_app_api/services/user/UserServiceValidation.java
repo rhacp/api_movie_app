@@ -1,6 +1,6 @@
 package com.rhacp.movie_app_api.services.user;
 
-import com.rhacp.movie_app_api.models.dtos.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 
 public interface UserServiceValidation {
