@@ -29,9 +29,12 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
-    public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter, UserRepository userRepository) {
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter, UserRepository userRepository, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userRepository = userRepository;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -44,15 +47,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/welcome", "/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
-                        .requestMatchers("/api/v1/auth/user/userProfile").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
                         .requestMatchers("/api/v1/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/v1/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/v1/searchIndex/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/reviews/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/movie/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/v1/movieList/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
+                .exceptionHandling(e->e.accessDeniedHandler(customAccessDeniedHandler))
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
                 )

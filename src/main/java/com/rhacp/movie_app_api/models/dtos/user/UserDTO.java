@@ -1,8 +1,8 @@
-package com.rhacp.movie_app_api.models.dtos;
+package com.rhacp.movie_app_api.models.dtos.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rhacp.movie_app_api.models.entities.Review;
 import com.rhacp.movie_app_api.utils.validators.RolePattern;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,6 +24,7 @@ public class UserDTO {
     private String name;
 
     @NotBlank
+    @Email
     @Size(min = 3, max = 30, message = "Must be between 3 and 30 characters.")
     private String email;
 

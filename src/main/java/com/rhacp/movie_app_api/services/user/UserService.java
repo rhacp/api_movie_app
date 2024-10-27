@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.services.user;
 
-import com.rhacp.movie_app_api.models.dtos.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
 
 import java.util.List;
 
@@ -36,4 +37,6 @@ public interface UserService {
      * @return String message.
      */
     String deleteUserById(Long userId);
+
+    UserDTO updateUserById(Long userId, UserUpdateDTO userDTO);
 }

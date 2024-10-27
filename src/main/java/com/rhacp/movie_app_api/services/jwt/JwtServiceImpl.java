@@ -108,4 +108,8 @@ public class JwtServiceImpl implements JwtService {
 
         return this.generateToken(authRequestDTO.getUsername());
     }
+
+    public String getAllClaims(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
 }

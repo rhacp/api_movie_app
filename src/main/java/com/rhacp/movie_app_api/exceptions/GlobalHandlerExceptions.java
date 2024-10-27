@@ -26,12 +26,6 @@ public class GlobalHandlerExceptions {
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(MalformedJwtException.class)
-//    public ResponseEntity<Object> handleSecurityException(MalformedJwtException exception) {
-//        log.error("MalformedJwtException thrown: {}", exception.getMessage());
-//        return getResponse(new RuntimeException("Authentication header is missing or incorrect."), HttpStatus.UNAUTHORIZED);
-//    }
-
     @ExceptionHandler(CustomSignatureMismatchException.class)
     public ResponseEntity<Object> handleCustomSignatureMismatch(CustomSignatureMismatchException exception) {
         log.error("CustomSignatureMismatch thrown: {}", exception.getMessage());

@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.services.user;
 
-import com.rhacp.movie_app_api.models.dtos.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,16 +44,61 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
-        return List.of();
+        List<User> userList = userRepository.findAll();
+        log.info("User list retrieved. Method: {}.", "getAllUsers");
+
+        return userList.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .toList();
     }
 
     @Override
     public UserDTO getUserById(Long userId) {
-        return null;
+        User userFound = userServiceValidation.getValidUser(userId, "getUserById");
+        return modelMapper.map(userFound, UserDTO.class);
     }
 
     @Override
     public String deleteUserById(Long userId) {
-        return "";
+        userServiceValidation.getValidUser(userId, "deleteUserById");
+
+        userRepository.deleteById(userId);
+        log.info("User {} deleted. Method {}.", userId, "deleteUserById");
+
+        return "User with id " + userId + " deleted.";
+    }
+
+    @Override
+    public UserDTO updateUserById(Long userId, UserUpdateDTO userDTO) {
+        User userFound = userServiceValidation.getValidUser(userId, "updateUser");
+
+        updateUserFromDTO(userFound, userDTO);
+        User savedUser = userRepository.save(userFound);
+        log.info("User {} : {} updated. Method: {}.", savedUser.getId(), savedUser.getEmail(), "updateUser");
+
+        return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+    /**
+     * Helper method that updates the given user from the given DTO (only the existing fields).
+     * @param user Existing user.
+     * @param userDTO Update DTO.
+     */
+    private void updateUserFromDTO(User user, UserUpdateDTO userDTO) {
+        if (userDTO.getName() != null) {
+            user.setName(userDTO.getName());
+        }
+
+        if (userDTO.getEmail() != null) {
+            user.setEmail(userDTO.getEmail());
+        }
+
+        if (userDTO.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+        if (userDTO.getRoles() != null) {
+            user.setRoles(userDTO.getRoles());
+        }
     }
 }
