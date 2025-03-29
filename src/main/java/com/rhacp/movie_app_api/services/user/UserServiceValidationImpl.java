@@ -29,15 +29,16 @@ public class UserServiceValidationImpl implements UserServiceValidation {
         User userFound = userRepository.findUserByEmail(userDTO.getEmail());
 
         if (userFound != null) {
-            throw new ResourceAlreadyExistsException("A user with the email " + userDTO.getEmail() + " already exists");
+            throw new ResourceAlreadyExistsException("A user with the email " + userDTO.getEmail() + " already exists.");
         }
     }
 
+    @Transactional
     @Override
     public User getValidUser(Long userId, String methodName) {
         User userFound = userRepository.findUserById(userId);
         if (userFound == null) {
-            throw new ResourceNotFoundException("User with id " + userId + " not found");
+            throw new ResourceNotFoundException("User with id " + userId + " not found.");
         }
 
         log.info("User with id {} retrieved. Method: {}", userId, methodName);
@@ -48,14 +49,15 @@ public class UserServiceValidationImpl implements UserServiceValidation {
     @Transactional
     @Override
     public User getValidUserByToken(String token, String methodName) {
-        String email = jwtService.extractUsername(token); // Extract username from token
+        String actualToken = token.substring(6);
+        String email = jwtService.extractUsername(actualToken); // Extract username from token
 
         User userFound = userRepository.findUserByEmail(email);
         if (userFound == null) {
-            throw new ResourceNotFoundException("User with email " + email + " not found");
+            throw new ResourceNotFoundException("User with email " + email + " not found from given token.");
         }
 
-        log.info("User with email {} retrieved. Method: {}", email, methodName);
+        log.info("User with email {} retrieved from given token. Method: {}", email, methodName);
 
         return userFound;
     }

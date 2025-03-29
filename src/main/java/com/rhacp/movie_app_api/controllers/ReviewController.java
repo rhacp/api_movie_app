@@ -4,6 +4,7 @@ import com.rhacp.movie_app_api.models.dtos.ReviewDTO;
 import com.rhacp.movie_app_api.services.review.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
-
 
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
@@ -24,6 +24,7 @@ public class ReviewController {
      * @return ResponseEntity.ok : ReviewDTO created.
      */
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewDTO reviewDTO) {
         return ResponseEntity.ok(reviewService.createReview(reviewDTO));
     }
@@ -35,7 +36,12 @@ public class ReviewController {
      * @return ResponseEntity.ok : ReviewDTO retrieved.
      */
     @GetMapping("/{reviewId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long reviewId) {
         return ResponseEntity.ok(reviewService.getReviewById(reviewId));
     }
+
+    //update review
+
+    //get all reviews for specific movie
 }

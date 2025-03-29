@@ -32,6 +32,6 @@ public class MovieListDTO {
 
     private List<Movie> movies = new ArrayList<>();
 
-    @JsonIgnore
+//    @JsonIgnore
     private User userMovie;
 }

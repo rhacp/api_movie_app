@@ -24,7 +24,7 @@ public class SearchIndexController {
      * @return ResponseEntity.ok : MovieDTO list.
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<MovieDTO>> getMovieList(@RequestParam(required = false) String keyword) {
         return ResponseEntity.ok(searchIndexService.getMovieList(keyword));
     }

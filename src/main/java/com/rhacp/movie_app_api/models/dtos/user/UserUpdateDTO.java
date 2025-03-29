@@ -3,7 +3,6 @@ package com.rhacp.movie_app_api.models.dtos.user;
 import com.rhacp.movie_app_api.models.entities.Review;
 import com.rhacp.movie_app_api.utils.validators.RolePattern;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;

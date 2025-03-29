@@ -5,4 +5,6 @@ import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
 public interface MovieListService {
 
     MovieListDTO createMovieList(MovieListDTO movieListDTO, String token);
+
+    void deleteMovieListById(Long movieListId, String token);
 }

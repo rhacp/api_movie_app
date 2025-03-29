@@ -1,9 +1,11 @@
 package com.rhacp.movie_app_api.services.user;
 
+import com.rhacp.movie_app_api.exceptions.CustomForbiddenResourceException;
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> getAllUsers() {
         List<User> userList = userRepository.findAll();
-        log.info("User list retrieved. Method: {}.", "getAllUsers");
+        log.info("User list retrieved from db. Method: {}.", "getAllUsers");
 
         return userList.stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
@@ -53,9 +55,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(Long userId) {
-        User userFound = userServiceValidation.getValidUser(userId, "getUserById");
-        return modelMapper.map(userFound, UserDTO.class);
+    public UserDTO getUserById(Long userId, String token) {
+        User userFoundFromToken = userServiceValidation.getValidUserByToken(token, "getUserById");
+        User userFoundById = userServiceValidation.getValidUser(userId, "getUserById");
+
+        checkIfUserTheSame(userFoundFromToken, userFoundById);
+
+        return modelMapper.map(userFoundById, UserDTO.class);
     }
 
     @Override
@@ -77,6 +83,20 @@ public class UserServiceImpl implements UserService {
         log.info("User {} : {} updated. Method: {}.", savedUser.getId(), savedUser.getEmail(), "updateUser");
 
         return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+    @Override
+    public User getUserByToken(String token) {
+        return userServiceValidation.getValidUserByToken(token, "getUserByToken");
+    }
+
+    @Override
+    public void checkIfUserTheSame(User userFoundFromToken, User userFoundById) {
+        //If user not ROLE_ADMIN and username from token not the same as username from id, then forbidden resource.
+        if (!userFoundFromToken.getEmail().equals(userFoundById.getEmail())
+                && !userFoundFromToken.getRoles().equalsIgnoreCase("role_admin")) {
+            throw new CustomForbiddenResourceException("Forbidden resource.");
+        }
     }
 
     /**

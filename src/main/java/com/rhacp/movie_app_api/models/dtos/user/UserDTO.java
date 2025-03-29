@@ -1,5 +1,6 @@
 package com.rhacp.movie_app_api.models.dtos.user;
 
+import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.Review;
 import com.rhacp.movie_app_api.utils.validators.RolePattern;
 import jakarta.validation.constraints.Email;
@@ -37,4 +38,6 @@ public class UserDTO {
 
 //    @JsonIgnore
     private List<Review> reviewList = new ArrayList<>();
+
+    private List<MovieList> listMovieList = new ArrayList<>();
 }

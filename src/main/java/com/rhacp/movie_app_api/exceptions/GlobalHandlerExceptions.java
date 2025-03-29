@@ -34,8 +34,8 @@ public class GlobalHandlerExceptions {
 
     @ExceptionHandler(CustomExpiredTokenException.class)
     public ResponseEntity<Object> handleCustomExpiredTokenException(CustomExpiredTokenException exception) {
-        log.error("ExpiredTokenException thrown: {}", exception.getMessage());
-        return getResponse(new RuntimeException("Token has expired."), HttpStatus.UNAUTHORIZED);
+        log.error("CustomExpiredTokenException thrown: {}", exception.getMessage());
+        return getResponse(new RuntimeException(exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -54,6 +54,12 @@ public class GlobalHandlerExceptions {
     public ResponseEntity<Object> handleResourceAlreadyExists(ResourceAlreadyExistsException exception) {
         log.warn("ResourceAlreadyExists thrown.");
         return getResponse(exception, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CustomForbiddenResourceException.class)
+    public ResponseEntity<Object> handleCustomForbiddenResourceException(CustomForbiddenResourceException exception) {
+        log.warn("CustomForbiddenResourceException thrown.");
+        return getResponse(exception, HttpStatus.FORBIDDEN);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException exception, HttpStatus httpStatus) {

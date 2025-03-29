@@ -49,11 +49,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
                         .requestMatchers("/api/v1/auth/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/users/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/searchIndex/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/api/v1/reviews/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/api/v1/movie/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/api/v1/movieList/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/v1/searchIndex/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/v1/reviews/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/v1/movie/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/v1/movieList/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .exceptionHandling(e->e.accessDeniedHandler(customAccessDeniedHandler))

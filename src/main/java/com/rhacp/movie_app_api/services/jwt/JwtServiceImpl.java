@@ -7,6 +7,7 @@ import com.rhacp.movie_app_api.models.dtos.JwtDTO;
 import com.rhacp.movie_app_api.utils.properties.Properties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class JwtServiceImpl implements JwtService {
     // Create a JWT token with specified claims and subject (username).
     private JwtDTO createToken(Map<String, Object> claims, String userName) {
         Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * properties.getTokenLifetime());
+        System.out.println(expiry);
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
@@ -87,6 +89,8 @@ public class JwtServiceImpl implements JwtService {
             throw new CustomSignatureMismatchException("Invalid token.");
         } catch (ExpiredJwtException e) {
             throw new CustomExpiredTokenException("Token has expired.");
+        } catch (DecodingException e) {
+            throw new CustomExpiredTokenException("Decoding failed.");
         }
     }
 

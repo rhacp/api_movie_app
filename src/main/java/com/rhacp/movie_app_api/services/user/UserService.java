@@ -2,6 +2,7 @@ package com.rhacp.movie_app_api.services.user;
 
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
+import com.rhacp.movie_app_api.models.entities.user.User;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface UserService {
      * @param userId User id to search for.
      * @return UserDTO returned user DTO.
      */
-    UserDTO getUserById(Long userId);
+    UserDTO getUserById(Long userId, String token);
 
     /**
      * Delete user by the given id.
@@ -39,4 +40,8 @@ public interface UserService {
     String deleteUserById(Long userId);
 
     UserDTO updateUserById(Long userId, UserUpdateDTO userDTO);
+
+    User getUserByToken(String token);
+
+    void checkIfUserTheSame(User userFoundFromToken, User userFoundById);
 }
