@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -44,6 +45,26 @@ public class MovieListServiceImpl implements MovieListService {
         log.info("MovieList {} inserted in db. Method: {}.", savedMovieList.getId(), "createMovieList");
 
         return modelMapper.map(savedMovieList, MovieListDTO.class);
+    }
+
+    @Transactional
+    @Override
+    public List<MovieListDTO> getAllMovieLists() {
+        List<MovieList> movieListList = movieListRepository.findAll();
+        log.info("MovieList list retrieved from db. Method: {}.", "getAllMovieLists");
+
+        return movieListList.stream()
+                .map(movieList -> modelMapper.map(movieList, MovieListDTO.class))
+                .toList();
+    }
+
+    @Override
+    public MovieListDTO getMovieListById(Long id, String token) {
+        MovieList movieList = movieListValidation.getValidMovieList(id, "getMovieListById");
+
+        userService.checkIfUserTheSame(userService.getUserByToken(token), movieList.getUserMovieList());
+
+        return modelMapper.map(movieList, MovieListDTO.class);
     }
 
     @Transactional

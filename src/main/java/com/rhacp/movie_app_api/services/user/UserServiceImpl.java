@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         userServiceValidation.validateUserAlreadyExists(userDTO);
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(savedUser, UserDTO.class);
     }
 
+    @Transactional
     @Override
     public List<UserDTO> getAllUsers() {
         List<User> userList = userRepository.findAll();
@@ -64,6 +66,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(userFoundById, UserDTO.class);
     }
 
+    @Transactional
     @Override
     public String deleteUserById(Long userId) {
         userServiceValidation.getValidUser(userId, "deleteUserById");
@@ -74,6 +77,8 @@ public class UserServiceImpl implements UserService {
         return "User with id " + userId + " deleted.";
     }
 
+    //check if users the same or admin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @Transactional
     @Override
     public UserDTO updateUserById(Long userId, UserUpdateDTO userDTO) {
         User userFound = userServiceValidation.getValidUser(userId, "updateUser");
@@ -95,7 +100,7 @@ public class UserServiceImpl implements UserService {
         //If user not ROLE_ADMIN and username from token not the same as username from id, then forbidden resource.
         if (!userFoundFromToken.getEmail().equals(userFoundById.getEmail())
                 && !userFoundFromToken.getRoles().equalsIgnoreCase("role_admin")) {
-            throw new CustomForbiddenResourceException("Forbidden resource.");
+            throw new CustomForbiddenResourceException("User not allowed here.");
         }
     }
 

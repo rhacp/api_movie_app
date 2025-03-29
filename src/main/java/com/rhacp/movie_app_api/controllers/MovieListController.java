@@ -27,17 +27,17 @@ public class MovieListController {
         return ResponseEntity.ok(movieListService.createMovieList(movieListDTO, token));
     }
 
-//    @GetMapping
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-//    public ResponseEntity<List<MovieListDTO>> getAllMovieList() {
-//        return ResponseEntity.ok(movieListService.getAllMovieList());
-//    }
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<MovieListDTO>> getAllMovieLists() {
+        return ResponseEntity.ok(movieListService.getAllMovieLists());
+    }
 
-//    @GetMapping("/{id}")
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-//    public ResponseEntity<MovieListDTO> getMovieListById(@PathVariable("id") Long id) {
-//        return ResponseEntity.ok(movieListService.getMovieListById());
-//    }
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<MovieListDTO> getMovieListById(@PathVariable("id") Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return ResponseEntity.ok(movieListService.getMovieListById(id, token));
+    }
 
 //    @PostMapping("/{id}")
 //    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
