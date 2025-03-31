@@ -109,6 +109,7 @@ public class JwtServiceImpl implements JwtService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword())
         );
+        log.info("Token retrieved for user {}. Method: authenticateAndGetToken", authRequestDTO.getUsername());
 
         return this.generateToken(authRequestDTO.getUsername());
     }

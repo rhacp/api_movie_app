@@ -1,7 +1,9 @@
 package com.rhacp.movie_app_api.services.movie;
 
+import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.models.dtos.MovieDTO;
 import com.rhacp.movie_app_api.models.entities.Movie;
+import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.SearchIndex;
 import com.rhacp.movie_app_api.repositories.MovieRepository;
 import jakarta.transaction.Transactional;
@@ -27,6 +29,7 @@ public class MovieServiceImpl implements MovieService {
         this.modelMapper = modelMapper;
     }
 
+    @Override
     public MovieDTO getMovieById(Long id) {
         Movie movie = movieServiceValidation.getValidMovie(id, "getMovieById");
         return modelMapper.map(movie, MovieDTO.class);
@@ -54,5 +57,31 @@ public class MovieServiceImpl implements MovieService {
                 movieRepository.save(movie);
             }
         });
+    }
+
+    @Transactional
+    @Override
+    public Movie setMovieListAndReturnMovieById(Long id, MovieList movieList) {
+        Movie movie = movieServiceValidation.getValidMovie(id, "setMovieListAndReturnMovieById");
+
+        if (movie.getMovieLists().contains(movieList)) {
+            throw new ResourceAlreadyExistsException("Movie already in the list.");
+        }
+
+        movie.getMovieLists().add(movieList);
+
+        Movie savedMovie = movieRepository.save(movie);
+        return modelMapper.map(savedMovie, Movie.class);
+    }
+
+    @Transactional
+    @Override
+    public Movie removeMovieListAndReturnMovieById(Long id, MovieList movieList) {
+        Movie movie = movieServiceValidation.getValidMovie(id, "getMovieById");
+
+        movie.getMovieLists().remove(movieList);
+        Movie savedMovie = movieRepository.save(movie);
+
+        return modelMapper.map(savedMovie, Movie.class);
     }
 }

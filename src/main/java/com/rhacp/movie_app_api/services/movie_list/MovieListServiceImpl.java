@@ -1,8 +1,11 @@
 package com.rhacp.movie_app_api.services.movie_list;
 
 import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
+import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.MovieList;
+import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.MovieListRepository;
+import com.rhacp.movie_app_api.services.movie.MovieService;
 import com.rhacp.movie_app_api.services.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +28,14 @@ public class MovieListServiceImpl implements MovieListService {
 
     private final UserService userService;
 
-    public MovieListServiceImpl(MovieListRepository movieListRepository, ModelMapper modelMapper, MovieListValidation movieListValidation, UserService userService) {
+    private final MovieService movieService;
+
+    public MovieListServiceImpl(MovieListRepository movieListRepository, ModelMapper modelMapper, MovieListValidation movieListValidation, UserService userService, MovieService movieService) {
         this.movieListRepository = movieListRepository;
         this.modelMapper = modelMapper;
         this.movieListValidation = movieListValidation;
         this.userService = userService;
+        this.movieService = movieService;
     }
 
     @Transactional
@@ -69,6 +75,19 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
+    public MovieListDTO updateMovieListById(Long id, String token, MovieListDTO movieListDTO) {
+        MovieList movieList = movieListValidation.getValidMovieList(id, "updateMovieListById");
+        userService.checkIfUserTheSame(userService.getUserByToken(token), movieList.getUserMovieList());
+
+        updateMovieListFromDTO(movieList, movieListDTO);
+        MovieList savedMovieList = movieListRepository.save(movieList);
+        log.info("MovieList {} updated. Method: {}.", savedMovieList.getId(), "updateMovieListById");
+
+        return modelMapper.map(savedMovieList, MovieListDTO.class);
+    }
+
+    @Transactional
+    @Override
     public void deleteMovieListById(Long movieListId, String token) {
         MovieList foundMovieList = movieListValidation.getValidMovieList(movieListId, "deleteMovieListById");
 
@@ -76,5 +95,56 @@ public class MovieListServiceImpl implements MovieListService {
 
         movieListRepository.deleteById(movieListId);
         log.info("MovieList {} deleted. Method {}.", movieListId, "deleteMovieListById");
+    }
+
+    @Transactional
+    @Override
+    public MovieListDTO addMovieToListById(Long movieListId, Long movieId, String token) {
+        MovieList foundMovieList = movieListValidation.getValidMovieList(movieListId, "addMovieToListById");
+        userService.checkIfUserTheSame(userService.getUserByToken(token), foundMovieList.getUserMovieList());
+
+        Movie foundMovie = movieService.setMovieListAndReturnMovieById(movieId, foundMovieList);
+
+        foundMovieList.getMovies().add(foundMovie);
+        MovieList savedMovieList = movieListRepository.save(foundMovieList);
+        log.info("Movie {} added to MovieList {}. Method: {}.", savedMovieList.getId(), foundMovie.getMovieId(), "addMovieToListById");
+
+        return modelMapper.map(savedMovieList, MovieListDTO.class);
+    }
+
+    @Transactional
+    @Override
+    public MovieListDTO deleteMovieFromListById(Long movieListId, Long movieId, String token) {
+        MovieList foundMovieList = movieListValidation.getValidMovieList(movieListId, "deleteMovieFromListById");
+        userService.checkIfUserTheSame(userService.getUserByToken(token), foundMovieList.getUserMovieList());
+
+        Movie foundMovie = movieService.removeMovieListAndReturnMovieById(movieId, foundMovieList);
+
+        foundMovieList.getMovies().remove(foundMovie);
+        MovieList savedMovieList = movieListRepository.save(foundMovieList);
+        log.info("Movie {} removed from MovieList {}. Method: {}.", savedMovieList.getId(), foundMovie.getMovieId(), "deleteMovieFromListById");
+
+        return modelMapper.map(savedMovieList, MovieListDTO.class);
+    }
+
+    @Transactional
+    @Override
+    public List<MovieListDTO> getAllMovieListsForUser(Long userId, String token) {
+        User foundUser = modelMapper.map(userService.getUserById(userId, token), User.class);
+        List<MovieList> movieListList = movieListRepository.findMovieListByUserMovieList(foundUser);
+
+        return movieListList.stream()
+                .map(movieList -> modelMapper.map(movieList, MovieListDTO.class))
+                .toList();
+    }
+
+    private void updateMovieListFromDTO(MovieList movieList, MovieListDTO movieListDTO) {
+        if (movieListDTO.getName() != null) {
+            movieList.setName(movieListDTO.getName());
+        }
+
+        if (movieListDTO.getDescription() != null) {
+            movieList.setDescription(movieListDTO.getDescription());
+        }
     }
 }

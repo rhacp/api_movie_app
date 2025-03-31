@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_info")
+@Table(name = "users_info")
 public class User {
 
     @Id

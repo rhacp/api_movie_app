@@ -1,11 +1,13 @@
 package com.rhacp.movie_app_api.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -35,8 +37,7 @@ public class Movie {
     @JsonBackReference(value = "searchIndexMovies")
     private SearchIndex searchIndex;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "movie_list_id")
-    @JsonBackReference(value = "userMovies")
-    private MovieList movieList;
+    @ManyToMany(mappedBy = "movies")
+    @JsonIgnoreProperties("movies")
+    private List<MovieList> movieLists;
 }

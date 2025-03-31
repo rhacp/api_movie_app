@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "search_index")
+@Table(name = "search_indexes")
 public class SearchIndex {
 
     @Id
