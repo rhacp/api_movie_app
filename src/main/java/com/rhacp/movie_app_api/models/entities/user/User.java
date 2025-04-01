@@ -3,6 +3,7 @@ package com.rhacp.movie_app_api.models.entities.user;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.Review;
+import com.rhacp.movie_app_api.utils.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,8 +40,8 @@ public class User {
     @Column(name = "creation_time")
     private LocalTime creationTime;
 
-    @Column(name = "roles")
-    private String roles;
+    @Column(name = "role")
+    private Role role;
 
     @OneToMany(mappedBy = "reviewUser")
     @JsonManagedReference(value = "review")

@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -76,7 +78,7 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
-    public MovieListDTO updateMovieListById(Long id, String token, MovieListDTO movieListDTO) {
+    public MovieListDTO updateMovieListById(Long id, MovieListDTO movieListDTO, String token) {
         MovieList movieList = movieListValidation.getValidMovieList(id, "updateMovieListById");
         userService.checkIfUserTheSame(userService.getUserByToken(token), movieList.getUserMovieList());
 
@@ -89,18 +91,24 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
-    public void deleteMovieListById(Long movieListId, String token) {
-        MovieList foundMovieList = movieListValidation.getValidMovieList(movieListId, "deleteMovieListById");
-
+    public Map<String, String> deleteMovieListById(Long id, String token) {
+        MovieList foundMovieList = movieListValidation.getValidMovieList(id, "deleteMovieListById");
         userService.checkIfUserTheSame(userService.getUserByToken(token), foundMovieList.getUserMovieList());
 
-        movieListRepository.deleteById(movieListId);
-        log.info("MovieList {} deleted. Method {}.", movieListId, "deleteMovieListById");
+        movieListRepository.deleteById(id);
+        log.info("MovieList {} deleted. Method {}.", id, "deleteMovieListById");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "MovieList with id " + id + " deleted.");
+
+        return response;
     }
 
     @Transactional
     @Override
-    public MovieListDTO addMovieToListById(Long movieListId, Long movieId, String token) {
+    public MovieListDTO addMovieToListById(Long movieListId,
+                                           Long movieId,
+                                           String token) {
         MovieList foundMovieList = movieListValidation.getValidMovieList(movieListId, "addMovieToListById");
         userService.checkIfUserTheSame(userService.getUserByToken(token), foundMovieList.getUserMovieList());
 
@@ -115,7 +123,9 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
-    public MovieListDTO deleteMovieFromListById(Long movieListId, Long movieId, String token) {
+    public MovieListDTO deleteMovieFromListById(Long movieListId,
+                                                Long movieId,
+                                                String token) {
         MovieList foundMovieList = movieListValidation.getValidMovieList(movieListId, "deleteMovieFromListById");
         userService.checkIfUserTheSame(userService.getUserByToken(token), foundMovieList.getUserMovieList());
 
@@ -130,7 +140,8 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
-    public List<MovieListDTO> getAllMovieListsForUser(Long userId, String token) {
+    public List<MovieListDTO> getAllMovieListsForUser(Long userId,
+                                                      String token) {
         User foundUser = userService.getUserEntityById(userId);
         userService.checkIfUserTheSame(userService.getUserByToken(token), foundUser);
 
@@ -141,7 +152,8 @@ public class MovieListServiceImpl implements MovieListService {
                 .toList();
     }
 
-    private void updateMovieListFromDTO(MovieList movieList, MovieListDTO movieListDTO) {
+    private void updateMovieListFromDTO(MovieList movieList,
+                                        MovieListDTO movieListDTO) {
         if (movieListDTO.getName() != null) {
             movieList.setName(movieListDTO.getName());
         }

@@ -8,14 +8,12 @@ import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.ReviewRepository;
 import com.rhacp.movie_app_api.services.movie.MovieService;
 import com.rhacp.movie_app_api.services.user.UserService;
-import com.rhacp.movie_app_api.utils.properties.Properties;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +29,11 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserService userService;
     private final MovieService movieService;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewServiceValidation reviewServiceValidation, ModelMapper modelMapper, Properties properties, UserService userService, MovieService movieService) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository,
+                             ReviewServiceValidation reviewServiceValidation,
+                             ModelMapper modelMapper,
+                             UserService userService,
+                             MovieService movieService) {
         this.reviewRepository = reviewRepository;
         this.reviewServiceValidation = reviewServiceValidation;
         this.modelMapper = modelMapper;
@@ -41,7 +43,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     @Override
-    public ReviewDTO createReview(ReviewInputDTO reviewInputDTO, String token) {
+    public ReviewDTO createReview(ReviewInputDTO reviewInputDTO,
+                                  String token) {
         Review review = modelMapper.map(reviewInputDTO, Review.class);
 
         review.setCreationDate(LocalDate.now());
@@ -66,14 +69,17 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDTO getReviewById(Long id, String token) {
+    public ReviewDTO getReviewById(Long id,
+                                   String token) {
         Review review = reviewServiceValidation.getValidReview(id, "getReviewById");
 
         return modelMapper.map(review, ReviewDTO.class);
     }
 
     @Override
-    public ReviewDTO updateReviewById(Long id, ReviewDTO reviewDTO, String token) {
+    public ReviewDTO updateReviewById(Long id,
+                                      ReviewDTO reviewDTO,
+                                      String token) {
         Review reviewFound = reviewServiceValidation.getValidReview(id, "updateReviewById");
 
         userService.checkIfUserTheSame(userService.getUserByToken(token), reviewFound.getReviewUser());
@@ -87,7 +93,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     @Override
-    public Map<String, String> deleteReviewById(Long id, String token) {
+    public Map<String, String> deleteReviewById(Long id,
+                                                String token) {
         Review foundReview = reviewServiceValidation.getValidReview(id, "deleteReviewById");
         userService.checkIfUserTheSame(userService.getUserByToken(token), foundReview.getReviewUser());
 
@@ -114,7 +121,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     @Override
-    public List<ReviewDTO> getAllReviewsForUser(Long userId, String token) {
+    public List<ReviewDTO> getAllReviewsForUser(Long userId,
+                                                String token) {
         User foundUser = userService.getUserEntityById(userId);
         userService.checkIfUserTheSame(userService.getUserByToken(token), foundUser);
 
@@ -125,7 +133,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .toList();
     }
 
-    private void updateReviewFromDTO(Review review, ReviewDTO reviewDTO) {
+    private void updateReviewFromDTO(Review review,
+                                     ReviewDTO reviewDTO) {
         if (reviewDTO.getReviewText() != null) {
             review.setReviewText(reviewDTO.getReviewText());
         }

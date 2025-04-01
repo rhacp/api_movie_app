@@ -2,7 +2,6 @@ package com.rhacp.movie_app_api.filters;
 
 import com.rhacp.movie_app_api.exceptions.CustomExpiredTokenException;
 import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatchException;
-import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.services.jwt.JwtService;
 import com.rhacp.movie_app_api.services.user.UserServiceHelp;
 import io.jsonwebtoken.MalformedJwtException;
@@ -22,6 +21,9 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
+/**
+ * JWT authorization filter which executes once per request and checks the authorization token.
+ */
 @Slf4j
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -39,7 +41,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = null;
             String username = null;
@@ -62,20 +66,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userServiceHelp.loadUserByUsername(username);
 
-                // Validate token and set authentication
-                if (jwtService.validateToken(token, userDetails)) {
-                    try {
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
+                extracted(request, token, userDetails);
             }
 
             // Continue the filter chain
@@ -84,6 +75,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             handlerExceptionResolver.resolveException(request, response, null, e);
         } catch (MalformedJwtException e) {
             handlerExceptionResolver.resolveException(request, response, null, new CustomSignatureMismatchException("Malformed token."));
+        }
+    }
+
+    private void extracted(HttpServletRequest request, String token, UserDetails userDetails) {
+        // Validate token and set authentication
+        if (Boolean.TRUE.equals(jwtService.validateToken(token, userDetails))) {
+            try {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

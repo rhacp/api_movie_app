@@ -35,19 +35,23 @@ public class UserController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id,
+                                               @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(userService.getUserById(id, token));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Map<String, String>> deleteUserById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<Map<String, String>> deleteUserById(@PathVariable Long id,
+                                                              @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(userService.deleteUserById(id, token));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO userDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id,
+                                                  @Valid @RequestBody UserUpdateDTO userDTO,
+                                                  @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(userService.updateUserById(id, userDTO, token));
     }
 }

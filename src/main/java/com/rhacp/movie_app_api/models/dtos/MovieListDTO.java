@@ -1,6 +1,5 @@
 package com.rhacp.movie_app_api.models.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +31,5 @@ public class MovieListDTO {
 
     private List<Movie> movies = new ArrayList<>();
 
-//    @JsonIgnore
     private User userMovie;
 }

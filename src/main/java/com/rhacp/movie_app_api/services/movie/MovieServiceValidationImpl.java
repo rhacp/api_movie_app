@@ -20,7 +20,8 @@ public class MovieServiceValidationImpl implements MovieServiceValidation {
 
     @Transactional
     @Override
-    public Movie getValidMovie(Long id, String methodName) {
+    public Movie getValidMovie(Long id,
+                               String methodName) {
         Movie movie = movieRepository.findMovieById(id);
 
         if (movie == null) {

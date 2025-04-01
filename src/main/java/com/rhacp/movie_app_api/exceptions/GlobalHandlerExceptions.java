@@ -1,7 +1,6 @@
 package com.rhacp.movie_app_api.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Global controller for handling all exceptions and return the error messages in the API response.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalHandlerExceptions {
@@ -70,7 +72,8 @@ public class GlobalHandlerExceptions {
         return getResponse(exception, HttpStatus.NOT_FOUND);
     }
 
-    private ResponseEntity<Object> getResponse(RuntimeException exception, HttpStatus httpStatus) {
+    private ResponseEntity<Object> getResponse(RuntimeException exception,
+                                               HttpStatus httpStatus) {
         Map<String, Object> result = new HashMap<>();
         result.put("message", exception.getMessage());
         return new ResponseEntity<>(result, httpStatus);

@@ -18,7 +18,8 @@ public class UserServiceHelp implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceHelp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceHelp(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

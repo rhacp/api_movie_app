@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +32,10 @@ public class SecurityConfig {
 
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    private static final String ROLE_USER = "ROLE_USER";
+
     public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter, UserRepository userRepository, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userRepository = userRepository;
@@ -45,15 +50,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
-                        .requestMatchers("/api/v1/auth/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/api/v1/searchIndex/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/api/v1/reviews/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/api/v1/movie/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                        .requestMatchers("/api/v1/movieList/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/v1/users/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                        .requestMatchers("/api/v1/searchIndex/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                        .requestMatchers("/api/v1/reviews/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                        .requestMatchers("/api/v1/movie/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                        .requestMatchers("/api/v1/movieList/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .exceptionHandling(e->e.accessDeniedHandler(customAccessDeniedHandler))

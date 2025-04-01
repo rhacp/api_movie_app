@@ -28,9 +28,8 @@ public class UserUpdateDTO {
     @Size(min = 3, max = 30, message = "Must be between 3 and 30 characters.")
     private String password;
 
-    @RolePattern(anyOf = {"role_user", "role_admin", "role_user,role_admin"})
-    private String roles;
+    @RolePattern(anyOf = {"role_user", "role_admin"})
+    private String role;
 
-    //    @JsonIgnore
     private List<Review> reviewList = new ArrayList<>();
 }

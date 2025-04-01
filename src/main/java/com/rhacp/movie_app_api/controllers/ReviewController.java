@@ -30,7 +30,8 @@ public class ReviewController {
      */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewInputDTO reviewInputDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<ReviewDTO> createReview(@Valid @RequestBody ReviewInputDTO reviewInputDTO,
+                                                  @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(reviewService.createReview(reviewInputDTO, token));
     }
 
@@ -48,36 +49,36 @@ public class ReviewController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id,
+                                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(reviewService.getReviewById(id, token));
     }
 
-    //update review
-
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> updateReviewById(@PathVariable Long id, @Valid @RequestBody ReviewDTO reviewDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<ReviewDTO> updateReviewById(@PathVariable Long id,
+                                                      @Valid @RequestBody ReviewDTO reviewDTO,
+                                                      @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(reviewService.updateReviewById(id, reviewDTO, token));
     }
 
-    //delete review
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Map<String, String>> deleteReviewById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<Map<String, String>> deleteReviewById(@PathVariable Long id,
+                                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(reviewService.deleteReviewById(id, token));
     }
 
-    //get all reviews for specific movie
     @GetMapping("/movies/{movieId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<ReviewDTO>> getAllReviewsForMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(reviewService.getAllReviewsForMovie(movieId));
     }
 
-    //get all reviews for specific user
     @GetMapping("/users/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<ReviewDTO>> getAllReviewsForUser(@PathVariable Long userId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public ResponseEntity<List<ReviewDTO>> getAllReviewsForUser(@PathVariable Long userId,
+                                                                @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(reviewService.getAllReviewsForUser(userId, token));
     }
 }

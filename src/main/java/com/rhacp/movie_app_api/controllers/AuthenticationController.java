@@ -18,6 +18,12 @@ public class AuthenticationController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * POST endpoint to get token based on account details.
+     *
+     * @param authRequestDTO DTO object containing username and password.
+     * @return ResponseEntity.ok : JwtDTO containing the token.
+     */
     @PostMapping("/generateToken")
     public ResponseEntity<JwtDTO> authenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(jwtService.authenticateAndGetToken(authRequestDTO));

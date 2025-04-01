@@ -18,7 +18,8 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     private final JwtService jwtService;
 
-    public UserServiceValidationImpl(UserRepository userRepository, JwtService jwtService) {
+    public UserServiceValidationImpl(UserRepository userRepository,
+                                     JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
@@ -35,7 +36,8 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     @Transactional
     @Override
-    public User getValidUser(Long userId, String methodName) {
+    public User getValidUser(Long userId,
+                             String methodName) {
         User userFound = userRepository.findUserById(userId);
         if (userFound == null) {
             throw new ResourceNotFoundException("User with id " + userId + " not found.");
@@ -48,7 +50,8 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     @Transactional
     @Override
-    public User getValidUserByToken(String token, String methodName) {
+    public User getValidUserByToken(String token,
+                                    String methodName) {
         String actualToken = token.substring(6);
         String email = jwtService.extractUsername(actualToken); // Extract username from token
 

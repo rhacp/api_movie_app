@@ -23,7 +23,9 @@ public class MovieServiceImpl implements MovieService {
 
     private final ModelMapper modelMapper;
 
-    public MovieServiceImpl(MovieRepository movieRepository, MovieServiceValidation movieServiceValidation, ModelMapper modelMapper) {
+    public MovieServiceImpl(MovieRepository movieRepository,
+                            MovieServiceValidation movieServiceValidation,
+                            ModelMapper modelMapper) {
         this.movieRepository = movieRepository;
         this.movieServiceValidation = movieServiceValidation;
         this.modelMapper = modelMapper;
@@ -36,7 +38,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void assignSearchIndex(List<Movie> movieList, SearchIndex searchIndex) {
+    public void assignSearchIndex(List<Movie> movieList,
+                                  SearchIndex searchIndex) {
         movieList.forEach(movie -> movie.setSearchIndex(searchIndex));
     }
 
@@ -61,7 +64,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional
     @Override
-    public Movie setMovieListAndReturnMovieById(Long id, MovieList movieList) {
+    public Movie setMovieListAndReturnMovieById(Long id,
+                                                MovieList movieList) {
         Movie movie = movieServiceValidation.getValidMovie(id, "setMovieListAndReturnMovieById");
 
         if (movie.getMovieLists().contains(movieList)) {
@@ -76,8 +80,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Transactional
     @Override
-    public Movie removeMovieListAndReturnMovieById(Long id, MovieList movieList) {
-        Movie movie = movieServiceValidation.getValidMovie(id, "getMovieById");
+    public Movie removeMovieListAndReturnMovieById(Long id,
+                                                   MovieList movieList) {
+        Movie movie = movieServiceValidation.getValidMovie(id, "removeMovieListAndReturnMovieById");
 
         movie.getMovieLists().remove(movieList);
         Movie savedMovie = movieRepository.save(movie);
@@ -88,6 +93,6 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     @Override
     public Movie getMovieEntityById(Long id) {
-        return movieServiceValidation.getValidMovie(id, "getMovieById");
+        return movieServiceValidation.getValidMovie(id, "getMovieEntityById");
     }
 }

@@ -5,6 +5,7 @@ import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
+import com.rhacp.movie_app_api.utils.enums.Role;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -29,7 +30,10 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           ModelMapper modelMapper,
+                           UserServiceValidation userServiceValidation,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
@@ -64,7 +68,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(Long id, String token) {
+    public UserDTO getUserById(Long id,
+                               String token) {
         User userFoundFromToken = userServiceValidation.getValidUserByToken(token, "getUserById");
         User userFoundById = userServiceValidation.getValidUser(id, "getUserById");
 
@@ -76,7 +81,8 @@ public class UserServiceImpl implements UserService {
     //check if user admin or user the same
     @Transactional
     @Override
-    public Map<String, String> deleteUserById(Long id, String token) {
+    public Map<String, String> deleteUserById(Long id,
+                                              String token) {
         User foundUser = userServiceValidation.getValidUser(id, "deleteUserById");
         checkIfUserTheSame(getUserByToken(token), foundUser);
 
@@ -91,7 +97,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO updateUserById(Long id, UserUpdateDTO userDTO, String token) {
+    public UserDTO updateUserById(Long id,
+                                  UserUpdateDTO userDTO,
+                                  String token) {
         User userFound = userServiceValidation.getValidUser(id, "updateUser");
 
         checkIfUserTheSame(getUserByToken(token), userFound);
@@ -109,10 +117,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void checkIfUserTheSame(User userFoundFromToken, User userFoundById) {
+    public void checkIfUserTheSame(User userFoundFromToken,
+                                   User userFoundById) {
         //If user not ROLE_ADMIN and username from token not the same as username from id, then forbidden resource.
         if (!userFoundFromToken.getEmail().equals(userFoundById.getEmail())
-                && !userFoundFromToken.getRoles().equalsIgnoreCase("role_admin")) {
+                && !userFoundFromToken.getRole().getRoleLabel().equalsIgnoreCase("role_admin")) {
             throw new CustomForbiddenResourceException("User not allowed here.");
         }
     }
@@ -128,7 +137,8 @@ public class UserServiceImpl implements UserService {
      * @param user Existing user.
      * @param userDTO Update DTO.
      */
-    private void updateUserFromDTO(User user, UserUpdateDTO userDTO) {
+    private void updateUserFromDTO(User user,
+                                   UserUpdateDTO userDTO) {
         if (userDTO.getName() != null) {
             user.setName(userDTO.getName());
         }
@@ -141,8 +151,19 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
 
-        if (userDTO.getRoles() != null) {
-            user.setRoles(userDTO.getRoles());
+        if (userDTO.getRole() != null) {
+            updateUserRole(user, userDTO.getRole());
+        }
+    }
+
+    private void updateUserRole(User user,
+                                String roleToSet) {
+        if (roleToSet.equalsIgnoreCase("role_admin")) {
+            user.setRole(Role.ROLE_ADMIN);
+        }
+
+        if (roleToSet.equalsIgnoreCase("role_user")) {
+            user.setRole(Role.ROLE_USER);
         }
     }
 }

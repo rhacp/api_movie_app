@@ -40,7 +40,7 @@ public class UserDTO {
     private LocalTime creationTime;
 
     @RolePattern(anyOf = {"role_user", "role_admin"})
-    private String roles;
+    private String role;
 
     private List<Review> reviewList = new ArrayList<>();
 

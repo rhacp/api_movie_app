@@ -31,7 +31,8 @@ public class MovieListValidationImpl implements MovieListValidation {
 
     @Transactional
     @Override
-    public MovieList getValidMovieList(Long movieListId, String methodName) {
+    public MovieList getValidMovieList(Long movieListId,
+                                       String methodName) {
         MovieList movieListFound = movieListRepository.findMovieListById(movieListId);
 
         if (movieListFound == null) {

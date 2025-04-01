@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -31,7 +30,8 @@ public class JwtServiceImpl implements JwtService {
 
     private final AuthenticationManager authenticationManager;
 
-    public JwtServiceImpl(Properties properties, AuthenticationManager authenticationManager) {
+    public JwtServiceImpl(Properties properties,
+                          AuthenticationManager authenticationManager) {
         this.properties = properties;
         this.authenticationManager = authenticationManager;
     }
@@ -43,7 +43,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     // Create a JWT token with specified claims and subject (username).
-    private JwtDTO createToken(Map<String, Object> claims, String userName) {
+    private JwtDTO createToken(Map<String, Object> claims,
+                               String userName) {
         Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * properties.getTokenLifetime());
         System.out.println(expiry);
         JwtBuilder jwtBuilder = Jwts.builder()
@@ -73,7 +74,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     // Extract a claim from the token.
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token,
+                              Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -101,7 +103,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     // Validate the token against user details and expiration.
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token,
+                                 UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 

@@ -17,14 +17,14 @@ public class MovieController {
     }
 
     /**
-     * GET endpoint to retrieve movie by title.
+     * GET endpoint to retrieve movie by id.
      *
      * @param id Id of the movie.
      * @return ResponseEntity.ok : MovieDTO retrieved.
      */
-    @GetMapping
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<MovieDTO> getMovieById(@RequestParam Long id) {
+    public ResponseEntity<MovieDTO> getMovieById(@PathVariable Long id) {
         return ResponseEntity.ok(movieService.getMovieById(id));
     }
 }
