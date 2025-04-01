@@ -2,8 +2,10 @@ package com.rhacp.movie_app_api.filters;
 
 import com.rhacp.movie_app_api.exceptions.CustomExpiredTokenException;
 import com.rhacp.movie_app_api.exceptions.CustomSignatureMismatchException;
+import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.services.jwt.JwtService;
 import com.rhacp.movie_app_api.services.user.UserServiceHelp;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -77,8 +80,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // Continue the filter chain
             filterChain.doFilter(request, response);
-        } catch (CustomSignatureMismatchException | CustomExpiredTokenException e) {
+        } catch (CustomSignatureMismatchException | CustomExpiredTokenException | UsernameNotFoundException e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
+        } catch (MalformedJwtException e) {
+            handlerExceptionResolver.resolveException(request, response, null, new CustomSignatureMismatchException("Malformed token."));
         }
     }
 

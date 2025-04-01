@@ -84,4 +84,10 @@ public class MovieServiceImpl implements MovieService {
 
         return modelMapper.map(savedMovie, Movie.class);
     }
+
+    @Transactional
+    @Override
+    public Movie getMovieEntityById(Long id) {
+        return movieServiceValidation.getValidMovie(id, "getMovieById");
+    }
 }

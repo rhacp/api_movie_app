@@ -29,7 +29,7 @@ public class UserServiceHelp implements UserDetailsService {
 
         // Converting User to UserDetails
         return user.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public String addUser(User user) {

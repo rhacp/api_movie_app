@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +33,16 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
+
+    @Column(name = "creation_time")
+    private LocalTime creationTime;
+
     @Column(name = "roles")
     private String roles;
 
-    @OneToMany(mappedBy = "userReview")
+    @OneToMany(mappedBy = "reviewUser")
     @JsonManagedReference(value = "review")
     private List<Review> reviewList = new ArrayList<>();
 

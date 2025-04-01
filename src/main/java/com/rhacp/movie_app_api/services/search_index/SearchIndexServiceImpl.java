@@ -51,13 +51,13 @@ public class SearchIndexServiceImpl implements SearchIndexService {
 
         // Initialize last SearchIndex by Keyword.
         SearchIndex lastSearchIndexByKeyword = new SearchIndex();
-        lastSearchIndexByKeyword.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
+        lastSearchIndexByKeyword.setCreationTime(LocalTime.now().withNano(0).minus(100, MINUTES));
         if (!searchIndexListByKeyword.isEmpty()) {
             lastSearchIndexByKeyword = searchIndexListByKeyword.getLast();
         }
 
         // Check if enough time passed.
-        if (abs(MINUTES.between(lastSearchIndexByKeyword.getTime(), LocalTime.now())) < properties.getRetrieveInterval()) {
+        if (abs(MINUTES.between(lastSearchIndexByKeyword.getCreationTime(), LocalTime.now())) < properties.getRetrieveInterval()) {
             return returnLastMovieList(lastSearchIndexByKeyword);
         }
 

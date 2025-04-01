@@ -44,9 +44,10 @@ public class MovieListServiceImpl implements MovieListService {
         movieListValidation.validateMovieListAlreadyExists(movieListDTO);
 
         MovieList movieList = modelMapper.map(movieListDTO, MovieList.class);
-        movieList.setDate(LocalDate.now());
-        movieList.setTime(LocalTime.now().withNano(0));
+        movieList.setCreationDate(LocalDate.now());
+        movieList.setCreationTime(LocalTime.now().withNano(0));
         movieList.setUserMovieList(userService.getUserByToken(token));
+
         MovieList savedMovieList = movieListRepository.save(movieList);
         log.info("MovieList {} inserted in db. Method: {}.", savedMovieList.getId(), "createMovieList");
 
@@ -130,7 +131,9 @@ public class MovieListServiceImpl implements MovieListService {
     @Transactional
     @Override
     public List<MovieListDTO> getAllMovieListsForUser(Long userId, String token) {
-        User foundUser = modelMapper.map(userService.getUserById(userId, token), User.class);
+        User foundUser = userService.getUserEntityById(userId);
+        userService.checkIfUserTheSame(userService.getUserByToken(token), foundUser);
+
         List<MovieList> movieListList = movieListRepository.findMovieListByUserMovieList(foundUser);
 
         return movieListList.stream()

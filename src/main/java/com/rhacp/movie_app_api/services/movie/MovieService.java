@@ -30,4 +30,6 @@ public interface MovieService {
     Movie setMovieListAndReturnMovieById(Long id, MovieList movieList);
 
     Movie removeMovieListAndReturnMovieById(Long id, MovieList movieList);
+
+    Movie getMovieEntityById(Long id);
 }

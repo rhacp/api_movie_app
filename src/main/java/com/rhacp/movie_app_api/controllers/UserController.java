@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -32,21 +33,21 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(userService.getUserById(userId, token));
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return ResponseEntity.ok(userService.getUserById(id, token));
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.deleteUserById(userId));
+    public ResponseEntity<Map<String, String>> deleteUserById(@PathVariable Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return ResponseEntity.ok(userService.deleteUserById(id, token));
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> updateUserById(@PathVariable Long userId, @Valid @RequestBody UserUpdateDTO userDTO) {
-        return ResponseEntity.ok(userService.updateUserById(userId, userDTO));
+    public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO userDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return ResponseEntity.ok(userService.updateUserById(id, userDTO, token));
     }
 }

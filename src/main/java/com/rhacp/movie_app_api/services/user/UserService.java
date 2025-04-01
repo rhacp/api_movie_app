@@ -5,6 +5,7 @@ import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -37,11 +38,13 @@ public interface UserService {
      * @param userId User id to delete.
      * @return String message.
      */
-    String deleteUserById(Long userId);
+    Map<String, String> deleteUserById(Long userId, String token);
 
-    UserDTO updateUserById(Long userId, UserUpdateDTO userDTO);
+    UserDTO updateUserById(Long userId, UserUpdateDTO userDTO, String token);
 
     User getUserByToken(String token);
 
     void checkIfUserTheSame(User userFoundFromToken, User userFoundById);
+
+    User getUserEntityById(Long id);
 }

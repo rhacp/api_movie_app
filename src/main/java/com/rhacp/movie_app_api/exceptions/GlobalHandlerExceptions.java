@@ -1,9 +1,11 @@
 package com.rhacp.movie_app_api.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -60,6 +62,12 @@ public class GlobalHandlerExceptions {
     public ResponseEntity<Object> handleCustomForbiddenResourceException(CustomForbiddenResourceException exception) {
         log.warn("CustomForbiddenResourceException thrown.");
         return getResponse(exception, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+        log.warn("UsernameNotFoundException thrown.");
+        return getResponse(exception, HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException exception, HttpStatus httpStatus) {

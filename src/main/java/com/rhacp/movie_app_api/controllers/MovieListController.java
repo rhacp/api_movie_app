@@ -53,7 +53,7 @@ public class MovieListController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{movieListId}/movie/{movieId}")
+    @PutMapping("/{movieListId}/movies/{movieId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<MovieListDTO> addMovieToListById(@PathVariable Long movieListId,
                                                          @PathVariable Long movieId,
@@ -61,7 +61,7 @@ public class MovieListController {
         return ResponseEntity.ok(movieListService.addMovieToListById(movieListId, movieId, token));
     }
 
-    @DeleteMapping("/{movieListId}/movie/{movieId}")
+    @DeleteMapping("/{movieListId}/movies/{movieId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<MovieListDTO> deleteMovieFromListById(@PathVariable Long movieListId,
                                                               @PathVariable Long movieId,
@@ -71,7 +71,7 @@ public class MovieListController {
         return ResponseEntity.ok(movieListService.deleteMovieFromListById(movieListId, movieId, token));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/users/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<MovieListDTO>> getAllMovieListsForUser(@PathVariable Long userId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(movieListService.getAllMovieListsForUser(userId, token));

@@ -1,18 +1,20 @@
 package com.rhacp.movie_app_api.services.review;
 
-import com.rhacp.movie_app_api.models.dtos.ReviewDTO;
+import com.rhacp.movie_app_api.models.dtos.review.ReviewDTO;
+import com.rhacp.movie_app_api.models.dtos.review.ReviewInputDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewService {
 
     /**
      * Creates a user based on the given userDTO.
      *
-     * @param reviewDTO Given userDTO.
+     * @param reviewInputDTO Given reviewInputDTO.
      * @return ReviewDTO of the saved user.
      */
-    ReviewDTO createReview(ReviewDTO reviewDTO);
+    ReviewDTO createReview(ReviewInputDTO reviewInputDTO, String token);
 
     /**
      * Returns the list of all existing users.
@@ -27,7 +29,7 @@ public interface ReviewService {
      * @param reviewId Review id to search for.
      * @return ReviewDTO with the specified id.
      */
-    ReviewDTO getReviewById(Long reviewId);
+    ReviewDTO getReviewById(Long reviewId, String token);
 
     /**
      * Update review based on given id and DTO, and returns it.
@@ -36,7 +38,7 @@ public interface ReviewService {
      * @param reviewDTO ReviewDTO to update from.
      * @return updated ReviewDTO.
      */
-    ReviewDTO updateReview(Long reviewId, ReviewDTO reviewDTO);
+    ReviewDTO updateReviewById(Long reviewId, ReviewDTO reviewDTO, String token);
 
     /**
      * Delete review based on given id.
@@ -44,5 +46,9 @@ public interface ReviewService {
      * @param reviewId Review id to delete.
      * @return String delete message.
      */
-    String deleteReview(Long reviewId);
+    Map<String, String> deleteReviewById(Long reviewId, String token);
+
+    List<ReviewDTO> getAllReviewsForMovie(Long movieId);
+
+    List<ReviewDTO> getAllReviewsForUser(Long userId, String token);
 }

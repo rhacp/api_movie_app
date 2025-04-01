@@ -27,11 +27,11 @@ public class MovieList {
     @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
 
-    @Column(name = "time")
-    private LocalTime time;
+    @Column(name = "creation_time")
+    private LocalTime creationTime;
 
     @Column(name = "description")
     private String description;

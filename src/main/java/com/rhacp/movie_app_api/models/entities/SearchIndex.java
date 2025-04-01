@@ -22,11 +22,11 @@ public class SearchIndex {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
 
-    @Column(name = "time")
-    private LocalTime time;
+    @Column(name = "creation_time")
+    private LocalTime creationTime;
 
     @Column(name = "search")
     private Integer search;
@@ -38,9 +38,9 @@ public class SearchIndex {
     @JsonManagedReference(value = "searchIndexMovies")
     private List<Movie> movieList = new ArrayList<>();
 
-    public SearchIndex(LocalDate date, LocalTime time, List<Movie> movieList, Integer search, String keyword) {
-        this.date = date;
-        this.time = time;
+    public SearchIndex(LocalDate creationDate, LocalTime creationTime, List<Movie> movieList, Integer search, String keyword) {
+        this.creationDate = creationDate;
+        this.creationTime = creationTime;
         this.movieList = movieList;
         this.search = search;
         this.keyword = keyword;

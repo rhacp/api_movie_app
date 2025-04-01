@@ -11,7 +11,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -39,6 +43,9 @@ public class UserServiceImpl implements UserService {
 
         User user = modelMapper.map(userDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreationDate(LocalDate.now());
+        user.setCreationTime(LocalTime.now().withNano(0));
+
         User savedUser = userRepository.save(user);
         log.info("User {} inserted in db. Method: {}.", savedUser.getEmail(), "createUser");
 
@@ -57,31 +64,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(Long userId, String token) {
+    public UserDTO getUserById(Long id, String token) {
         User userFoundFromToken = userServiceValidation.getValidUserByToken(token, "getUserById");
-        User userFoundById = userServiceValidation.getValidUser(userId, "getUserById");
+        User userFoundById = userServiceValidation.getValidUser(id, "getUserById");
 
         checkIfUserTheSame(userFoundFromToken, userFoundById);
 
         return modelMapper.map(userFoundById, UserDTO.class);
     }
 
+    //check if user admin or user the same
     @Transactional
     @Override
-    public String deleteUserById(Long userId) {
-        userServiceValidation.getValidUser(userId, "deleteUserById");
+    public Map<String, String> deleteUserById(Long id, String token) {
+        User foundUser = userServiceValidation.getValidUser(id, "deleteUserById");
+        checkIfUserTheSame(getUserByToken(token), foundUser);
 
-        userRepository.deleteById(userId);
-        log.info("User {} deleted. Method {}.", userId, "deleteUserById");
+        userRepository.deleteById(id);
+        log.info("User {} deleted. Method {}.", id, "deleteUserById");
 
-        return "User with id " + userId + " deleted.";
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User with id " + id + " deleted.");
+
+        return response;
     }
 
-    //check if users the same or admin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @Transactional
     @Override
-    public UserDTO updateUserById(Long userId, UserUpdateDTO userDTO) {
-        User userFound = userServiceValidation.getValidUser(userId, "updateUser");
+    public UserDTO updateUserById(Long id, UserUpdateDTO userDTO, String token) {
+        User userFound = userServiceValidation.getValidUser(id, "updateUser");
+
+        checkIfUserTheSame(getUserByToken(token), userFound);
 
         updateUserFromDTO(userFound, userDTO);
         User savedUser = userRepository.save(userFound);
@@ -102,6 +115,12 @@ public class UserServiceImpl implements UserService {
                 && !userFoundFromToken.getRoles().equalsIgnoreCase("role_admin")) {
             throw new CustomForbiddenResourceException("User not allowed here.");
         }
+    }
+
+    @Transactional
+    @Override
+    public User getUserEntityById(Long id) {
+        return userServiceValidation.getValidUser(id, "getUserEntityById");
     }
 
     /**

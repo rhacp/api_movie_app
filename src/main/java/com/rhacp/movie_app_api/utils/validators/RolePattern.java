@@ -19,7 +19,7 @@ public @interface RolePattern {
 
     String[] anyOf();
 
-    String message() default "Role must not be null and one of the following: \"ROLE_USER\", \"ROLE_ADMIN\" or \"ROLE_USER,ROLE_ADMIN\".";
+    String message() default "Role must not be null and one of the following: \"ROLE_USER\" or \"ROLE_ADMIN\".";
 
     Class<?>[] groups() default {};
 
