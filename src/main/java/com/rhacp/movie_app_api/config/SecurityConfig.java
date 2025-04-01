@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/movie/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/movieList/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/actuator/**").hasAuthority(ROLE_ADMIN)
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/v3/api-docs.yaml").permitAll()
                         .anyRequest().authenticated() // Protect all other endpoints
