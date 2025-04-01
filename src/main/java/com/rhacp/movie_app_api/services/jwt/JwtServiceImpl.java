@@ -7,6 +7,7 @@ import com.rhacp.movie_app_api.models.dtos.JwtDTO;
 import com.rhacp.movie_app_api.utils.properties.Properties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,8 @@ public class JwtServiceImpl implements JwtService {
 
     private final AuthenticationManager authenticationManager;
 
-    public JwtServiceImpl(Properties properties, AuthenticationManager authenticationManager) {
+    public JwtServiceImpl(Properties properties,
+                          AuthenticationManager authenticationManager) {
         this.properties = properties;
         this.authenticationManager = authenticationManager;
     }
@@ -41,8 +43,10 @@ public class JwtServiceImpl implements JwtService {
     }
 
     // Create a JWT token with specified claims and subject (username).
-    private JwtDTO createToken(Map<String, Object> claims, String userName) {
+    private JwtDTO createToken(Map<String, Object> claims,
+                               String userName) {
         Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * properties.getTokenLifetime());
+        System.out.println(expiry);
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
@@ -70,7 +74,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     // Extract a claim from the token.
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token,
+                              Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -87,6 +92,8 @@ public class JwtServiceImpl implements JwtService {
             throw new CustomSignatureMismatchException("Invalid token.");
         } catch (ExpiredJwtException e) {
             throw new CustomExpiredTokenException("Token has expired.");
+        } catch (DecodingException e) {
+            throw new CustomExpiredTokenException("Decoding failed.");
         }
     }
 
@@ -96,15 +103,18 @@ public class JwtServiceImpl implements JwtService {
     }
 
     // Validate the token against user details and expiration.
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token,
+                                 UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
     }
 
     public JwtDTO authenticateAndGetToken(AuthRequestDTO authRequestDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword())
         );
+        log.info("Token retrieved for user {}. Method: authenticateAndGetToken", authRequestDTO.getUsername());
 
         return this.generateToken(authRequestDTO.getUsername());
     }

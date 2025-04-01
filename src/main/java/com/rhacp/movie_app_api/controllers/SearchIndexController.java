@@ -19,12 +19,13 @@ public class SearchIndexController {
     }
 
     /**
-     * GET endpoint to retrieve the default movie list.
+     * GET endpoint to retrieve the default <code>SearchIndex</code> movie list.
      *
-     * @return ResponseEntity.ok : MovieDTO list.
+     * @param keyword Search keyword for the resulted list.
+     * @return <code>ResponseEntity.ok</code> : List of <code>MovieDTO</code>.
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<MovieDTO>> getMovieList(@RequestParam(required = false) String keyword) {
         return ResponseEntity.ok(searchIndexService.getMovieList(keyword));
     }

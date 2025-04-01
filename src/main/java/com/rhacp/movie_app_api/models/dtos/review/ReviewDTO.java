@@ -1,4 +1,4 @@
-package com.rhacp.movie_app_api.models.dtos;
+package com.rhacp.movie_app_api.models.dtos.review;
 
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.user.User;
@@ -9,27 +9,22 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieListDTO {
+public class ReviewDTO {
 
     private Long id;
 
     @NotBlank
-    private String name;
+    private String reviewText;
 
-    private LocalDate date;
+    private LocalDate creationDate;
 
-    private LocalTime time;
+    private LocalTime creationTime;
 
-    @NotBlank
-    private String description;
+    private User userReview;
 
-    private List<Movie> movies = new ArrayList<>();
-
-    private User userMovie;
+    private Movie reviewMovie;
 }

@@ -18,7 +18,8 @@ public class UserServiceHelp implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceHelp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceHelp(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -29,7 +30,7 @@ public class UserServiceHelp implements UserDetailsService {
 
         // Converting User to UserDetails
         return user.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public String addUser(User user) {

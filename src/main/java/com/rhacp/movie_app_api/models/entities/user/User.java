@@ -3,11 +3,14 @@ package com.rhacp.movie_app_api.models.entities.user;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.Review;
+import com.rhacp.movie_app_api.utils.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_info")
+@Table(name = "users_info")
 public class User {
 
     @Id
@@ -31,10 +34,16 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "roles")
-    private String roles;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
 
-    @OneToMany(mappedBy = "userReview")
+    @Column(name = "creation_time")
+    private LocalTime creationTime;
+
+    @Column(name = "role")
+    private Role role;
+
+    @OneToMany(mappedBy = "reviewUser")
     @JsonManagedReference(value = "review")
     private List<Review> reviewList = new ArrayList<>();
 

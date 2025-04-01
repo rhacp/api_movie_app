@@ -1,5 +1,6 @@
 package com.rhacp.movie_app_api.services.search_index;
 
+import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.dtos.MovieDTO;
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.dtos.movie_api_response.MovieAPIResponseDTO;
@@ -16,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -35,7 +37,11 @@ public class SearchIndexServiceImpl implements SearchIndexService {
 
     private final MovieService movieService;
 
-    public SearchIndexServiceImpl(Properties properties, WebClient webClient, ModelMapper modelMapper, SearchIndexRepository searchIndexRepository, MovieService movieService) {
+    public SearchIndexServiceImpl(Properties properties,
+                                  WebClient webClient,
+                                  ModelMapper modelMapper,
+                                  SearchIndexRepository searchIndexRepository,
+                                  MovieService movieService) {
         this.properties = properties;
         this.webClient = webClient;
         this.modelMapper = modelMapper;
@@ -51,13 +57,13 @@ public class SearchIndexServiceImpl implements SearchIndexService {
 
         // Initialize last SearchIndex by Keyword.
         SearchIndex lastSearchIndexByKeyword = new SearchIndex();
-        lastSearchIndexByKeyword.setTime(LocalTime.now().withNano(0).minus(100, MINUTES));
+        lastSearchIndexByKeyword.setCreationTime(LocalTime.now().withNano(0).minus(100, MINUTES));
         if (!searchIndexListByKeyword.isEmpty()) {
             lastSearchIndexByKeyword = searchIndexListByKeyword.getLast();
         }
 
         // Check if enough time passed.
-        if (abs(MINUTES.between(lastSearchIndexByKeyword.getTime(), LocalTime.now())) < properties.getRetrieveInterval()) {
+        if (abs(MINUTES.between(lastSearchIndexByKeyword.getCreationTime(), LocalTime.now())) < properties.getRetrieveInterval()) {
             return returnLastMovieList(lastSearchIndexByKeyword);
         }
 
@@ -66,7 +72,7 @@ public class SearchIndexServiceImpl implements SearchIndexService {
         if (keyword == null) {
             movieList = makeCallToMoviesApi(properties.getMovieApiLink() + properties.getMovieApiKey());
         } else {
-            movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword);
+            movieList = makeCallToMoviesApi(properties.getMovieApiSearch() + keyword + "&api_key=" + properties.getMovieApiKey());
         }
 
         // Create and save new SearchIndex.
@@ -100,6 +106,10 @@ public class SearchIndexServiceImpl implements SearchIndexService {
                 .retrieve()
                 .bodyToMono(MovieAPIResponseDTO.class)
                 .block();
+
+        if (movieAPIResponseDTOMono == null) {
+            throw new ResourceNotFoundException("Source inaccessible.");
+        }
 
         return movieAPIResponseDTOMono.getResults().stream()
                 .map(movie -> modelMapper.map(movie, Movie.class))

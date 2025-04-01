@@ -10,7 +10,8 @@ public class RolePatternValidator implements ConstraintValidator<RolePattern, St
     private String[] subset;
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+    public boolean isValid(String value,
+                           ConstraintValidatorContext context) {
         if (value == null || value.isEmpty()) return false;
 
         return Arrays.asList(subset).contains(value.toLowerCase());

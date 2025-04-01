@@ -7,7 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * Helper class for JWT linked to the local <code>User</code> entity.
+ */
 public class UserInfoDetails implements UserDetails {
 
     private final String username; // Changed from 'name' to 'username' for clarity
@@ -17,8 +21,9 @@ public class UserInfoDetails implements UserDetails {
     public UserInfoDetails(User user) {
         this.username = user.getEmail(); // Assuming 'name' is used as 'username'
         this.password = user.getPassword();
-        this.authorities = List.of(user.getRoles().split(","))
-                .stream()
+
+//        this.authorities = List.of(user.getRole().split(","))
+        this.authorities = Stream.of(user.getRole().getRoleLabel())
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

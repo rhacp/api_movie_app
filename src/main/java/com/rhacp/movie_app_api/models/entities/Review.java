@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -20,17 +21,22 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "movie_id")
-    private Long movieId;
-
     @Column(name = "review_text")
     private String reviewText;
 
-    @Column(name = "date_time", unique = true)
-    private LocalDateTime dateTime;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
+
+    @Column(name = "creation_time")
+    private LocalTime creationTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonBackReference(value = "review")
-    private User userReview;
+    private User reviewUser;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "review_id")
+    @JsonBackReference(value = "reviewMovie")
+    private Movie reviewMovie;
 }

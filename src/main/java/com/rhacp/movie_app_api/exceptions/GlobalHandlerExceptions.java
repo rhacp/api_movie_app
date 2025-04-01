@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Global controller for handling all exceptions and return the error messages in the API response.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalHandlerExceptions {
@@ -34,8 +38,8 @@ public class GlobalHandlerExceptions {
 
     @ExceptionHandler(CustomExpiredTokenException.class)
     public ResponseEntity<Object> handleCustomExpiredTokenException(CustomExpiredTokenException exception) {
-        log.error("ExpiredTokenException thrown: {}", exception.getMessage());
-        return getResponse(new RuntimeException("Token has expired."), HttpStatus.UNAUTHORIZED);
+        log.error("CustomExpiredTokenException thrown: {}", exception.getMessage());
+        return getResponse(new RuntimeException(exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -56,7 +60,20 @@ public class GlobalHandlerExceptions {
         return getResponse(exception, HttpStatus.CONFLICT);
     }
 
-    private ResponseEntity<Object> getResponse(RuntimeException exception, HttpStatus httpStatus) {
+    @ExceptionHandler(CustomForbiddenResourceException.class)
+    public ResponseEntity<Object> handleCustomForbiddenResourceException(CustomForbiddenResourceException exception) {
+        log.warn("CustomForbiddenResourceException thrown.");
+        return getResponse(exception, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+        log.warn("UsernameNotFoundException thrown.");
+        return getResponse(exception, HttpStatus.NOT_FOUND);
+    }
+
+    private ResponseEntity<Object> getResponse(RuntimeException exception,
+                                               HttpStatus httpStatus) {
         Map<String, Object> result = new HashMap<>();
         result.put("message", exception.getMessage());
         return new ResponseEntity<>(result, httpStatus);

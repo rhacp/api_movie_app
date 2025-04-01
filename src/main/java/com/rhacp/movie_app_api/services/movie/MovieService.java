@@ -2,6 +2,7 @@ package com.rhacp.movie_app_api.services.movie;
 
 import com.rhacp.movie_app_api.models.dtos.MovieDTO;
 import com.rhacp.movie_app_api.models.entities.Movie;
+import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.SearchIndex;
 
 import java.util.List;
@@ -25,4 +26,10 @@ public interface MovieService {
     void assignSearchIndex(List<Movie> movieList, SearchIndex searchIndex);
 
     void saveMovieList(List<Movie> movieList);
+
+    Movie setMovieListAndReturnMovieById(Long id, MovieList movieList);
+
+    Movie removeMovieListAndReturnMovieById(Long id, MovieList movieList);
+
+    Movie getMovieEntityById(Long id);
 }

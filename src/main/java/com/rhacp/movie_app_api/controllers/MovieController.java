@@ -3,6 +3,7 @@ package com.rhacp.movie_app_api.controllers;
 import com.rhacp.movie_app_api.models.dtos.MovieDTO;
 import com.rhacp.movie_app_api.services.movie.MovieService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,13 +17,14 @@ public class MovieController {
     }
 
     /**
-     * GET endpoint to retrieve movie by title.
+     * GET endpoint to retrieve movie by id.
      *
      * @param id Id of the movie.
      * @return ResponseEntity.ok : MovieDTO retrieved.
      */
-    @GetMapping
-    public ResponseEntity<MovieDTO> getMovieByTitle(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<MovieDTO> getMovieById(@PathVariable Long id) {
         return ResponseEntity.ok(movieService.getMovieById(id));
     }
 }

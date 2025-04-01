@@ -1,10 +1,13 @@
 package com.rhacp.movie_app_api.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.SearchIndex;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,4 +26,6 @@ public class MovieDTO {
 
     @JsonIgnore
     private SearchIndex searchIndex;
+
+    private List<MovieList> movieLists;
 }
