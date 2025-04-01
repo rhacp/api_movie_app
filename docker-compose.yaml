@@ -4,7 +4,7 @@ services:
     container_name: movie-app
     depends_on:
       - db
-      - movie-app-fe
+#      - movie-app-fe
     environment:
       - DB_URL=jdbc:postgresql://db:5432/movie_app_api
       - DB_USERNAME=developer
