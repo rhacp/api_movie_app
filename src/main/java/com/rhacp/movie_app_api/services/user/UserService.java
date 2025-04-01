@@ -47,4 +47,6 @@ public interface UserService {
     void checkIfUserTheSame(User userFoundFromToken, User userFoundById);
 
     User getUserEntityById(Long id);
+
+    void createFirstUser();
 }

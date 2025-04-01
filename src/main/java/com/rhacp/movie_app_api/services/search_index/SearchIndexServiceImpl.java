@@ -17,7 +17,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -51,7 +50,7 @@ public class SearchIndexServiceImpl implements SearchIndexService {
 
     @Transactional
     @Override
-    public List<MovieDTO> getMovieList(String keyword) {
+    public List<MovieDTO> getSearchIndex(String keyword) {
         // Get last SearchIndex list by keyword.
         List<SearchIndex> searchIndexListByKeyword = searchIndexRepository.findByKeyword(keyword);
 
