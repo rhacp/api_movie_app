@@ -23,13 +23,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
     }
 
     @GetMapping()
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<List<UserDTO>> getUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

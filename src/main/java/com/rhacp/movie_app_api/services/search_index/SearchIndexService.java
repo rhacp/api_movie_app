@@ -11,5 +11,5 @@ public interface SearchIndexService {
      *
      * @return Movie list.
      */
-    List<MovieDTO> getMovieList(String keyword);
+    List<MovieDTO> getSearchIndex(String keyword);
 }

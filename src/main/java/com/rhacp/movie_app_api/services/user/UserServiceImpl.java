@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserEntityById(Long id) {
         return userServiceValidation.getValidUser(id, "getUserEntityById");
+    }
+
+    @Transactional
+    @Override
+    public void createFirstUser() {
+        if (userRepository.findFirstByOrderById() == null) {
+            User user = new User(1L, "Admin", "admin@test.com", passwordEncoder.encode("admin"), LocalDate.now(), LocalTime.now().withNano(0), Role.ROLE_ADMIN, new ArrayList<>(),  new ArrayList<>());
+
+            User savedUser = userRepository.save(user);
+            log.info("User {} inserted in db. Method: {}.", savedUser.getEmail(), "createFirstUser");
+        }
     }
 
     /**

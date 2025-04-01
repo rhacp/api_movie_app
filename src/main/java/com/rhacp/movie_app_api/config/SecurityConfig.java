@@ -52,12 +52,17 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/register", "/api/v1/auth/generateToken").permitAll()
+                        .requestMatchers("/api/v1/auth/generateToken").permitAll()
+                        .requestMatchers("/api/v1/users/register").hasAuthority(ROLE_ADMIN)
                         .requestMatchers("/api/v1/users/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/searchIndex/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/reviews/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/movie/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/movieList/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/actuator/**").hasAuthority(ROLE_ADMIN)
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/api-docs.yaml").permitAll()
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
                 .exceptionHandling(e->e.accessDeniedHandler(customAccessDeniedHandler))

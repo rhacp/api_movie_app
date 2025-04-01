@@ -1,5 +1,5 @@
 # Start with a base image containing Java Alpine
-FROM openjdk:21-jdk-alpine
+FROM amazoncorretto:21-alpine-jdk
 
 # The application's jar file
 ARG JAR_FILE=target/movie-app-api-0.0.1-SNAPSHOT.jar
