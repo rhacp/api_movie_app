@@ -38,7 +38,7 @@ spring.jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.P
 security.secret: ""
 
 # App Config
-retrieve.interval: 1
+retrieve.interval: 5
 
 # JWT
-token.lifetime.minutes: 30
+token.lifetime.minutes: 60
