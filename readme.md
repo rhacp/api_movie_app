@@ -29,7 +29,7 @@ https://www.themoviedb.org/
 
 ### Instructions
 
-1. Use Postman to import the collection and environment present in the root directory of the project (`postman-collection` and `postman-environment`).
+1. Use Postman to import the collection and environment present in the root directory of the project (`Movie App API.postman_environment.json` and `MovieApp.postman_collection.json`).
 2. If there is no user present in the database, a new admin will be automatically created with the username `admin@test.com` and password `admin` (only an admin user can use the `Register` endpoint to create a new user).
 3. Use the `Generate Token` request along the credentials mentioned above to get an API token.
 4. Test the rest of the API (all other endpoints require the authentication token).
