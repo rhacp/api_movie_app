@@ -5,11 +5,7 @@ Java service structured as a RESTful API managing a movie library and integratin
 Trello: <br>
 https://trello.com/b/qaXNaswf/movie-app-web-application
 
----
-
-### Credits
-
-TMDB API:
+TMDB API used to fetch movies:
 https://www.themoviedb.org/
 
 ---
