@@ -6,6 +6,9 @@ import jakarta.persistence.Converter;
 
 import java.util.stream.Stream;
 
+/**
+ * Convert Enum to String for DB.
+ */
 @Converter(autoApply = true)
 public class RoleConverter implements AttributeConverter<Role,String> {
 

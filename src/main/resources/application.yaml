@@ -42,3 +42,7 @@ retrieve.interval: 5
 
 # JWT
 token.lifetime.minutes: 60
+
+# First Account
+fa.username: "admin@test.com"
+fa.password: "admin"

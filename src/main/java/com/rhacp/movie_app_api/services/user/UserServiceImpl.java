@@ -11,13 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.rhacp.movie_app_api.utils.properties.Properties;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -31,14 +29,18 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final Properties properties;
+
     public UserServiceImpl(UserRepository userRepository,
                            ModelMapper modelMapper,
                            UserServiceValidation userServiceValidation,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           Properties properties) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
         this.passwordEncoder = passwordEncoder;
+        this.properties = properties;
     }
 
     @Transactional
@@ -137,7 +139,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createFirstUser() {
         if (userRepository.findFirstByOrderById() == null) {
-            User user = new User(1L, "Admin", "admin@test.com", passwordEncoder.encode("admin"), LocalDate.now(), LocalTime.now().withNano(0), Role.ROLE_ADMIN, new ArrayList<>(),  new ArrayList<>());
+            User user = new User(1L, "Admin", properties.getFaUsername(), passwordEncoder.encode(properties.getFaPassword()), LocalDate.now(), LocalTime.now().withNano(0), Role.ROLE_ADMIN, new ArrayList<>(),  new ArrayList<>());
 
             User savedUser = userRepository.save(user);
             log.info("User {} inserted in db. Method: {}.", savedUser.getEmail(), "createFirstUser");

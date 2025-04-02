@@ -5,6 +5,9 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.Arrays;
 
+/**
+ * Custom regex validator for Role.
+ */
 public class RolePatternValidator implements ConstraintValidator<RolePattern, String> {
 
     private String[] subset;
