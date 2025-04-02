@@ -16,7 +16,7 @@ https://rhacp.github.io/MAA_Swagger/
 ### Run the Project
 
 1. Download the repository and unzip it.
-2. Open the `src/main/resources/application.yaml` and fill in the `movie.api.key` and the `security.secret`.
+2. Open the `src/main/resources/application.yaml` and fill in the `movie.api.key` and the `security.secret` (example: `5367566B59703373367639792F423F4528482B4D6251655468576D5A71347429`).
 3. Open the main folder, then open the command prompt.
 4. Run `mvn clean package` to build the project with maven and generate the jar file.
 5. Run `docker build -t movie-app-api .` to generate the Docker image.
