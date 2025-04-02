@@ -1,7 +1,7 @@
 package com.rhacp.movie_app_api.controllers;
 
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
-import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserInputDTO;
 import com.rhacp.movie_app_api.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -25,13 +25,13 @@ public class UserController {
     /**
      * POST endpoint to create User.
      *
-     * @param userDTO Received User DTO.
+     * @param userInputDTO Received User DTO.
      * @return ResponseEntity.ok : UserDTO created.
      */
     @PostMapping("/register")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.createUser(userDTO));
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserInputDTO userInputDTO) {
+        return ResponseEntity.ok(userService.createUser(userInputDTO));
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id,
-                                                  @Valid @RequestBody UserUpdateDTO userDTO,
+                                                  @Valid @RequestBody UserInputDTO userDTO,
                                                   @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(userService.updateUserById(id, userDTO, token));
     }

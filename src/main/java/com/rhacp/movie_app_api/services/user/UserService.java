@@ -1,7 +1,7 @@
 package com.rhacp.movie_app_api.services.user;
 
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
-import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserInputDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 
 import java.util.List;
@@ -12,10 +12,10 @@ public interface UserService {
     /**
      * Creates a user based on the given userDTO.
      *
-     * @param userDTO Given userDTO.
+     * @param userInputDTO Given userDTO.
      * @return UserDTO of the saved user.
      */
-    UserDTO createUser(UserDTO userDTO);
+    UserDTO createUser(UserInputDTO userInputDTO);
 
     /**
      * Returns the list of all existing users.
@@ -40,7 +40,7 @@ public interface UserService {
      */
     Map<String, String> deleteUserById(Long userId, String token);
 
-    UserDTO updateUserById(Long userId, UserUpdateDTO userDTO, String token);
+    UserDTO updateUserById(Long userId, UserInputDTO userDTO, String token);
 
     User getUserByToken(String token);
 

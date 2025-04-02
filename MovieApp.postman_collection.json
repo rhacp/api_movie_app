@@ -89,13 +89,6 @@
 								"v1",
 								"reviews",
 								"1"
-							],
-							"query": [
-								{
-									"key": "Authorization",
-									"value": "Bearer {{Token}}",
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -201,7 +194,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{URL}}/api/v1/reviews/users/2",
+							"raw": "{{URL}}/api/v1/reviews/users/1",
 							"host": [
 								"{{URL}}"
 							],
@@ -210,7 +203,7 @@
 								"v1",
 								"reviews",
 								"users",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -456,7 +449,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{URL}}/api/v1/users/2",
+							"raw": "{{URL}}/api/v1/users/1",
 							"host": [
 								"{{URL}}"
 							],
@@ -464,7 +457,7 @@
 								"api",
 								"v1",
 								"users",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -509,7 +502,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Modified\",\r\n    \"email\": \"update@test.com\",\r\n    \"password\": \"admin1234\",\r\n    \"role\": \"ROLE_ADMIN\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Update\",\r\n    \"email\": \"update@test.com\",\r\n    \"password\": \"update\",\r\n    \"role\": \"ROLE_ADMIN\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -549,7 +542,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Test1\",\r\n    \"description\": \"Description test\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"description\": \"Description test\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -633,7 +626,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{URL}}/api/v1/movieList/15",
+							"raw": "{{URL}}/api/v1/movieList/1",
 							"host": [
 								"{{URL}}"
 							],
@@ -641,7 +634,7 @@
 								"api",
 								"v1",
 								"movieList",
-								"15"
+								"1"
 							]
 						}
 					},
@@ -689,7 +682,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0YXJlMTIzQHRlc3QuY29tIiwiaWF0IjoxNzQzNDQ2MDgxLCJleHAiOjE3NDM0NDc4ODF9.JHrs84TCj0DndNgyLAT5-e4W5gOIGWUPMePaezds7Yg",
+								"value": "Bearer {{Token}}",
 								"type": "text"
 							}
 						],
@@ -703,17 +696,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/movieList/2/movies/5",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/movieList/1/movies/5",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"v1",
 								"movieList",
-								"2",
+								"1",
 								"movies",
 								"5"
 							]

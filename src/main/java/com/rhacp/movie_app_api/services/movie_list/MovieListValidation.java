@@ -2,7 +2,8 @@ package com.rhacp.movie_app_api.services.movie_list;
 
 import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
-import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListInputDTO;
 import com.rhacp.movie_app_api.models.entities.MovieList;
 
 public interface MovieListValidation {
@@ -10,10 +11,10 @@ public interface MovieListValidation {
     /**
      * Check if MovieList already exists.
      *
-     * @param movieListDTO MovieListDTO to check.
+     * @param movieListInputDTO MovieListDTO to check.
      * @throws ResourceAlreadyExistsException if Movie exists.
      */
-    void validateMovieListAlreadyExists(MovieListDTO movieListDTO);
+    void validateMovieListAlreadyExists(MovieListInputDTO movieListInputDTO);
 
     /**
      * Search for MovieList with the specified id and returns it if it exists.

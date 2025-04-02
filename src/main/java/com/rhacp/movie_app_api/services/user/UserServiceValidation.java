@@ -3,6 +3,7 @@ package com.rhacp.movie_app_api.services.user;
 import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserInputDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 
 public interface UserServiceValidation {
@@ -10,10 +11,10 @@ public interface UserServiceValidation {
     /**
      * Checks if User already exists.
      *
-     * @param userDTO UserDTO to check.
+     * @param userInputDTO UserDTO to check.
      * @throws ResourceAlreadyExistsException if User exists.
      */
-    void validateUserAlreadyExists(UserDTO userDTO);
+    void validateUserAlreadyExists(UserInputDTO userInputDTO);
 
     /**
      * Search for User with the specified id and returns it.

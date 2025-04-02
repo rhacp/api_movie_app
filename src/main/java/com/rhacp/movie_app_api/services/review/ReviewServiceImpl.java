@@ -2,6 +2,7 @@ package com.rhacp.movie_app_api.services.review;
 
 import com.rhacp.movie_app_api.models.dtos.review.ReviewDTO;
 import com.rhacp.movie_app_api.models.dtos.review.ReviewInputDTO;
+import com.rhacp.movie_app_api.models.dtos.review.ReviewUpdateDTO;
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.Review;
 import com.rhacp.movie_app_api.models.entities.user.User;
@@ -58,6 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
         return modelMapper.map(savedReview, ReviewDTO.class);
     }
 
+    @Transactional
     @Override
     public List<ReviewDTO> getAllReviews() {
         List<Review> reviewList = reviewRepository.findAll();
@@ -72,19 +74,21 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDTO getReviewById(Long id,
                                    String token) {
         Review review = reviewServiceValidation.getValidReview(id, "getReviewById");
+        userService.checkIfUserTheSame(userService.getUserByToken(token), review.getReviewUser());
 
         return modelMapper.map(review, ReviewDTO.class);
     }
 
+    @Transactional
     @Override
     public ReviewDTO updateReviewById(Long id,
-                                      ReviewDTO reviewDTO,
+                                      ReviewUpdateDTO reviewUpdateDTO,
                                       String token) {
         Review reviewFound = reviewServiceValidation.getValidReview(id, "updateReviewById");
 
         userService.checkIfUserTheSame(userService.getUserByToken(token), reviewFound.getReviewUser());
 
-        updateReviewFromDTO(reviewFound, reviewDTO);
+        updateReviewFromDTO(reviewFound, reviewUpdateDTO);
         Review savedReview = reviewRepository.save(reviewFound);
         log.info("Review {} updated. Method: {}.", savedReview.getId(), "updateReviewById");
 
@@ -134,7 +138,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private void updateReviewFromDTO(Review review,
-                                     ReviewDTO reviewDTO) {
+                                     ReviewUpdateDTO reviewDTO) {
         if (reviewDTO.getReviewText() != null) {
             review.setReviewText(reviewDTO.getReviewText());
         }

@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.services.movie_list;
 
-import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListInputDTO;
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.models.entities.user.User;
@@ -42,10 +43,10 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
-    public MovieListDTO createMovieList(MovieListDTO movieListDTO, String token) {
-        movieListValidation.validateMovieListAlreadyExists(movieListDTO);
+    public MovieListDTO createMovieList(MovieListInputDTO movieListInputDTO, String token) {
+        movieListValidation.validateMovieListAlreadyExists(movieListInputDTO);
 
-        MovieList movieList = modelMapper.map(movieListDTO, MovieList.class);
+        MovieList movieList = modelMapper.map(movieListInputDTO, MovieList.class);
         movieList.setCreationDate(LocalDate.now());
         movieList.setCreationTime(LocalTime.now().withNano(0));
         movieList.setUserMovieList(userService.getUserByToken(token));
@@ -78,11 +79,11 @@ public class MovieListServiceImpl implements MovieListService {
 
     @Transactional
     @Override
-    public MovieListDTO updateMovieListById(Long id, MovieListDTO movieListDTO, String token) {
+    public MovieListDTO updateMovieListById(Long id, MovieListInputDTO movieListInputDTO, String token) {
         MovieList movieList = movieListValidation.getValidMovieList(id, "updateMovieListById");
         userService.checkIfUserTheSame(userService.getUserByToken(token), movieList.getUserMovieList());
 
-        updateMovieListFromDTO(movieList, movieListDTO);
+        updateMovieListFromDTO(movieList, movieListInputDTO);
         MovieList savedMovieList = movieListRepository.save(movieList);
         log.info("MovieList {} updated. Method: {}.", savedMovieList.getId(), "updateMovieListById");
 
@@ -153,7 +154,7 @@ public class MovieListServiceImpl implements MovieListService {
     }
 
     private void updateMovieListFromDTO(MovieList movieList,
-                                        MovieListDTO movieListDTO) {
+                                        MovieListInputDTO movieListDTO) {
         if (movieListDTO.getName() != null) {
             movieList.setName(movieListDTO.getName());
         }

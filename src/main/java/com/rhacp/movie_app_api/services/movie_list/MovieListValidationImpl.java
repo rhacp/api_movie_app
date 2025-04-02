@@ -2,7 +2,7 @@ package com.rhacp.movie_app_api.services.movie_list;
 
 import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
-import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListInputDTO;
 import com.rhacp.movie_app_api.models.entities.MovieList;
 import com.rhacp.movie_app_api.repositories.MovieListRepository;
 import jakarta.transaction.Transactional;
@@ -21,11 +21,11 @@ public class MovieListValidationImpl implements MovieListValidation {
 
     @Transactional
     @Override
-    public void validateMovieListAlreadyExists(MovieListDTO movieListDTO) {
-        MovieList movieListFound = movieListRepository.findByName(movieListDTO.getName());
+    public void validateMovieListAlreadyExists(MovieListInputDTO movieListInputDTO) {
+        MovieList movieListFound = movieListRepository.findByName(movieListInputDTO.getName());
 
         if (movieListFound != null) {
-            throw new ResourceAlreadyExistsException("A movieList with the name " + movieListDTO.getName() + " already exists.");
+            throw new ResourceAlreadyExistsException("A movieList with the name " + movieListInputDTO.getName() + " already exists.");
         }
     }
 

@@ -2,6 +2,7 @@ package com.rhacp.movie_app_api.services.review;
 
 import com.rhacp.movie_app_api.models.dtos.review.ReviewDTO;
 import com.rhacp.movie_app_api.models.dtos.review.ReviewInputDTO;
+import com.rhacp.movie_app_api.models.dtos.review.ReviewUpdateDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,10 @@ public interface ReviewService {
      * Update review based on given id and DTO, and returns it.
      *
      * @param reviewId  Review id to search for.
-     * @param reviewDTO ReviewDTO to update from.
+     * @param reviewUpdateDTO ReviewUpdateDTO to update from.
      * @return updated ReviewDTO.
      */
-    ReviewDTO updateReviewById(Long reviewId, ReviewDTO reviewDTO, String token);
+    ReviewDTO updateReviewById(Long reviewId, ReviewUpdateDTO reviewUpdateDTO, String token);
 
     /**
      * Delete review based on given id.

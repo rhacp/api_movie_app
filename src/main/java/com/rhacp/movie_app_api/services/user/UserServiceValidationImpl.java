@@ -2,7 +2,7 @@ package com.rhacp.movie_app_api.services.user;
 
 import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
 import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
-import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserInputDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
 import com.rhacp.movie_app_api.services.jwt.JwtService;
@@ -26,11 +26,11 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     @Transactional
     @Override
-    public void validateUserAlreadyExists(UserDTO userDTO) {
-        User userFound = userRepository.findUserByEmail(userDTO.getEmail());
+    public void validateUserAlreadyExists(UserInputDTO userInputDTO) {
+        User userFound = userRepository.findUserByEmail(userInputDTO.getEmail());
 
         if (userFound != null) {
-            throw new ResourceAlreadyExistsException("A user with the email " + userDTO.getEmail() + " already exists.");
+            throw new ResourceAlreadyExistsException("A user with the email " + userInputDTO.getEmail() + " already exists.");
         }
     }
 

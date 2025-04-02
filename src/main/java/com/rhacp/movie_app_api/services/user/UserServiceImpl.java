@@ -2,7 +2,7 @@ package com.rhacp.movie_app_api.services.user;
 
 import com.rhacp.movie_app_api.exceptions.CustomForbiddenResourceException;
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
-import com.rhacp.movie_app_api.models.dtos.user.UserUpdateDTO;
+import com.rhacp.movie_app_api.models.dtos.user.UserInputDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
 import com.rhacp.movie_app_api.utils.enums.Role;
@@ -45,10 +45,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        userServiceValidation.validateUserAlreadyExists(userDTO);
+    public UserDTO createUser(UserInputDTO userInputDTO) {
+        userServiceValidation.validateUserAlreadyExists(userInputDTO);
 
-        User user = modelMapper.map(userDTO, User.class);
+        User user = modelMapper.map(userInputDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreationDate(LocalDate.now());
         user.setCreationTime(LocalTime.now().withNano(0));
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO updateUserById(Long id,
-                                  UserUpdateDTO userDTO,
+                                  UserInputDTO userDTO,
                                   String token) {
         User userFound = userServiceValidation.getValidUser(id, "updateUser");
 
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
      * @param userDTO Update DTO.
      */
     private void updateUserFromDTO(User user,
-                                   UserUpdateDTO userDTO) {
+                                   UserInputDTO userDTO) {
         if (userDTO.getName() != null) {
             user.setName(userDTO.getName());
         }

@@ -2,6 +2,7 @@ package com.rhacp.movie_app_api.controllers;
 
 import com.rhacp.movie_app_api.models.dtos.review.ReviewDTO;
 import com.rhacp.movie_app_api.models.dtos.review.ReviewInputDTO;
+import com.rhacp.movie_app_api.models.dtos.review.ReviewUpdateDTO;
 import com.rhacp.movie_app_api.services.review.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -58,16 +59,16 @@ public class ReviewController {
      * PUT endpoint to update Review by id.
      *
      * @param id Id of the review.
-     * @param reviewDTO DTO containing the new info.
+     * @param reviewUpdateDTO DTO containing the new info.
      * @param token User token.
      * @return ResponseEntity.ok : ReviewDTO retrieved.
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> updateReviewById(@PathVariable Long id,
-                                                      @Valid @RequestBody ReviewDTO reviewDTO,
+                                                      @Valid @RequestBody ReviewUpdateDTO reviewUpdateDTO,
                                                       @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(reviewService.updateReviewById(id, reviewDTO, token));
+        return ResponseEntity.ok(reviewService.updateReviewById(id, reviewUpdateDTO, token));
     }
 
     /**
@@ -85,7 +86,7 @@ public class ReviewController {
     }
 
     @GetMapping("/movies/{movieId}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ReviewDTO>> getAllReviewsForMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(reviewService.getAllReviewsForMovie(movieId));
     }

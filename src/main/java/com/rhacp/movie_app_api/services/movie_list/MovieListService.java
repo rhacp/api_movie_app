@@ -1,19 +1,20 @@
 package com.rhacp.movie_app_api.services.movie_list;
 
-import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListInputDTO;
 
 import java.util.List;
 import java.util.Map;
 
 public interface MovieListService {
 
-    MovieListDTO createMovieList(MovieListDTO movieListDTO, String token);
+    MovieListDTO createMovieList(MovieListInputDTO movieListInputDTO, String token);
 
     List<MovieListDTO> getAllMovieLists();
 
     MovieListDTO getMovieListById(Long id, String token);
 
-    MovieListDTO updateMovieListById(Long id, MovieListDTO movieListDTO, String token);
+    MovieListDTO updateMovieListById(Long id, MovieListInputDTO movieListInputDTO, String token);
 
     Map<String, String> deleteMovieListById(Long id, String token);
 

@@ -1,4 +1,4 @@
-package com.rhacp.movie_app_api.models.dtos;
+package com.rhacp.movie_app_api.models.dtos.movie_list;
 
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.user.User;

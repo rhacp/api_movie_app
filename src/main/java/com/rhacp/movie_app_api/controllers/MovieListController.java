@@ -1,6 +1,7 @@
 package com.rhacp.movie_app_api.controllers;
 
-import com.rhacp.movie_app_api.models.dtos.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListInputDTO;
 import com.rhacp.movie_app_api.services.movie_list.MovieListService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -24,14 +25,14 @@ public class MovieListController {
     /**
      * POST endpoint to create MovieList.
      *
-     * @param movieListDTO Received movieList DTO.
+     * @param movieListInputDTO Received movieList DTO.
      * @return ResponseEntity.ok : MovieListDTO created.
      */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<MovieListDTO> createMovieList(@Valid @RequestBody MovieListDTO movieListDTO,
+    public ResponseEntity<MovieListDTO> createMovieList(@Valid @RequestBody MovieListInputDTO movieListInputDTO,
                                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(movieListService.createMovieList(movieListDTO, token));
+        return ResponseEntity.ok(movieListService.createMovieList(movieListInputDTO, token));
     }
 
     /**
@@ -62,16 +63,16 @@ public class MovieListController {
      * PUT endpoint to update MovieList by id.
      *
      * @param id Id of the MovieList to be updated.
-     * @param movieListDTO DTO containing the new info.
+     * @param movieListInputDTO DTO containing the new info.
      * @param token User token.
      * @return ResponseEntity.ok : updated MovieListDTO.
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<MovieListDTO> updateMovieListById(@PathVariable Long id,
-                                                            @RequestBody MovieListDTO movieListDTO,
+                                                            @RequestBody MovieListInputDTO movieListInputDTO,
                                                             @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(movieListService.updateMovieListById(id, movieListDTO, token));
+        return ResponseEntity.ok(movieListService.updateMovieListById(id, movieListInputDTO, token));
     }
 
     /**
