@@ -19,11 +19,11 @@ public class ReviewServiceValidationImpl implements ReviewServiceValidation {
 
     @Transactional
     @Override
-    public Review getValidReview(Long reviewId,
+    public Review getValidReview(Long id,
                                  String methodName) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("Review with the id " + reviewId + " not found."));
-        log.error("Review with the id {} retrieved. Method: {}", reviewId, methodName);
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Review with the id " + id + " not found."));
+        log.error("Review with the id {} retrieved. Method: {}", id, methodName);
 
         return review;
     }

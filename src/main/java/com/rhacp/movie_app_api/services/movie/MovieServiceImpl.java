@@ -47,7 +47,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void saveMovieList(List<Movie> movieList) {
         movieList.forEach(movie -> {
-            Movie retrievedMovie = movieRepository.findMovieByMovieId(movie.getMovieId());
+            Movie retrievedMovie = movieRepository.findMovieById(movie.getMovieId());
             if (retrievedMovie == null) {
                 Movie savedMovie = movieRepository.save(movie);
                 movie.setId(savedMovie.getId());

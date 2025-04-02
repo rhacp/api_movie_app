@@ -46,7 +46,7 @@ public class MovieListController {
     }
 
     /**
-     * GET endpoint to receive a MovieList by id.
+     * GET endpoint to receive MovieList by id.
      *
      * @param id Id of the MovieList to be returned.
      * @return ResponseEntity.ok : MovieListDTO.
@@ -59,7 +59,7 @@ public class MovieListController {
     }
 
     /**
-     * PUT endpoint to update a MovieList by id.
+     * PUT endpoint to update MovieList by id.
      *
      * @param id Id of the MovieList to be updated.
      * @param movieListDTO DTO containing the new info.
@@ -75,7 +75,7 @@ public class MovieListController {
     }
 
     /**
-     * DELETE endpoint to remove a MovieList by id.
+     * DELETE endpoint to remove MovieList by id.
      *
      * @param id Id of the MovieList to be deleted.
      * @param token User token.
@@ -89,7 +89,7 @@ public class MovieListController {
     }
 
     /**
-     * PUT endpoint to a Movie to a MovieList.
+     * PUT endpoint to add Movie to MovieList.
      *
      * @param movieListId Id of the MovieList.
      * @param movieId Id of the Movie.
@@ -123,9 +123,10 @@ public class MovieListController {
     }
 
     /**
-     * GET endpoint to receive all MovieList for a specific User.
+     * GET endpoint to receive all MovieLists for specific User.
      *
      * @param userId Id of the User.
+     * @param token User token.
      * @return ResponseEntity.ok : List of MovieListDTO.
      */
     @GetMapping("/users/{userId}")

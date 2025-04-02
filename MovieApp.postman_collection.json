@@ -93,7 +93,7 @@
 							"query": [
 								{
 									"key": "Authorization",
-									"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTczNzUwMDYzNSwiZXhwIjoxNzM3NTAyNDM1fQ.Z4yeIZbS0evbTdB30A6sOsylSmjptQ1iKBLDuO4EvAs",
+									"value": "Bearer {{Token}}",
 									"disabled": true
 								}
 							]

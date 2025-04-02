@@ -13,8 +13,17 @@ import java.io.PrintWriter;
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
+    /**
+     * Custom handler exception for AccessDeniedException.
+     *
+     * @param request HttpServletRequest.
+     * @param response HttpServletResponse.
+     * @param accessDeniedException Exception.
+     */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setStatus(403);
         response.setContentType("application/json");
 

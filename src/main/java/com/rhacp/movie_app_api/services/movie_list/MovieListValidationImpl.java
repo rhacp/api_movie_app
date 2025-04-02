@@ -21,25 +21,25 @@ public class MovieListValidationImpl implements MovieListValidation {
 
     @Transactional
     @Override
-    public void validateMovieListAlreadyExists(MovieListDTO movieDTO) {
-        MovieList movieListFound = movieListRepository.findByName(movieDTO.getName());
+    public void validateMovieListAlreadyExists(MovieListDTO movieListDTO) {
+        MovieList movieListFound = movieListRepository.findByName(movieListDTO.getName());
 
         if (movieListFound != null) {
-            throw new ResourceAlreadyExistsException("A movieList with the name " + movieDTO.getName() + " already exists.");
+            throw new ResourceAlreadyExistsException("A movieList with the name " + movieListDTO.getName() + " already exists.");
         }
     }
 
     @Transactional
     @Override
-    public MovieList getValidMovieList(Long movieListId,
+    public MovieList getValidMovieList(Long id,
                                        String methodName) {
-        MovieList movieListFound = movieListRepository.findMovieListById(movieListId);
+        MovieList movieListFound = movieListRepository.findMovieListById(id);
 
         if (movieListFound == null) {
-            throw new ResourceNotFoundException("MovieList with id " + movieListId + " not found.");
+            throw new ResourceNotFoundException("MovieList with id " + id + " not found.");
         }
 
-        log.info("MovieList with id {} retrieved from db. Method: {}", movieListId, methodName);
+        log.info("MovieList with id {} retrieved from db. Method: {}", id, methodName);
 
         return movieListFound;
     }

@@ -7,7 +7,7 @@ import java.util.List;
 public interface SearchIndexService {
 
     /**
-     * Returns the full movie list.
+     * Returns the movie list assigned to the SearchIndex found by keyword.
      *
      * @return Movie list.
      */

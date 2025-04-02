@@ -12,14 +12,26 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     /**
-     * Query to retrieve review by id from DB.
+     * Retrieve Review by id.
      *
-     * @param id Id of the movie.
+     * @param id Id of the Review.
      * @return Review.
      */
     Review findReviewById(Long id);
 
+    /**
+     * Retrieve Reviews by Movie.
+     *
+     * @param movie Movie to search for.
+     * @return List of Review.
+     */
     List<Review> findReviewByReviewMovie(Movie movie);
 
+    /**
+     * Retrieve Reviews by User.
+     *
+     * @param user User to search for.
+     * @return List of Review.
+     */
     List<Review> findReviewByReviewUser(User user);
 }

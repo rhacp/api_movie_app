@@ -10,19 +10,10 @@ import java.util.List;
 public interface SearchIndexRepository extends JpaRepository<SearchIndex, Long> {
 
     /**
-     * Query to retrieve the searchIndex by id.
+     * Retrieve SearchIndexes by keyword.
      *
-     * @param id Id of the searchIndex.
-     * @return searchIndex.
+     * @param keyword Keyword to search for.
+     * @return List of SearchIndex.
      */
-    SearchIndex findSearchIndexById(Long id);
-
-    /**
-     * Query to retrieve the searchIndex with the highest id.
-     *.
-     * @return searchIndex.
-     */
-    SearchIndex findFirstByOrderByIdDesc();
-
     List<SearchIndex> findByKeyword(String keyword);
 }

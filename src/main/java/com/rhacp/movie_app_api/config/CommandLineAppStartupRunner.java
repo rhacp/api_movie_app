@@ -13,6 +13,12 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
         this.userService = userService;
     }
 
+    /**
+     * Runs once only when the application is started.
+     *
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
         userService.createFirstUser();

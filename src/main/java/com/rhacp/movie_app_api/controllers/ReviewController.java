@@ -23,7 +23,7 @@ public class ReviewController {
     }
 
     /**
-     * POST endpoint to create review.
+     * POST endpoint to create Review.
      *
      * @param reviewInputDTO Received review DTO.
      * @return ResponseEntity.ok : ReviewDTO created.
@@ -42,7 +42,7 @@ public class ReviewController {
     }
 
     /**
-     * GET endpoint to retrieve review by id.
+     * GET endpoint to retrieve Review by id.
      *
      * @param id Id of the review.
      * @return ResponseEntity.ok : ReviewDTO retrieved.
@@ -54,6 +54,14 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewById(id, token));
     }
 
+    /**
+     * PUT endpoint to update Review by id.
+     *
+     * @param id Id of the review.
+     * @param reviewDTO DTO containing the new info.
+     * @param token User token.
+     * @return ResponseEntity.ok : ReviewDTO retrieved.
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> updateReviewById(@PathVariable Long id,
@@ -62,6 +70,13 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.updateReviewById(id, reviewDTO, token));
     }
 
+    /**
+     * DELETE endpoint to remove Review by id.
+     *
+     * @param id Id of the Review to be deleted.
+     * @param token User token.
+     * @return ResponseEntity.ok : Map of String and string, confirmation message.
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<Map<String, String>> deleteReviewById(@PathVariable Long id,
@@ -75,6 +90,13 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getAllReviewsForMovie(movieId));
     }
 
+    /**
+     * GET endpoint to receive all Reviews for specific User.
+     *
+     * @param userId Id of the User.
+     * @param token User token.
+     * @return ResponseEntity.ok : List of MovieListDTO.
+     */
     @GetMapping("/users/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<ReviewDTO>> getAllReviewsForUser(@PathVariable Long userId,

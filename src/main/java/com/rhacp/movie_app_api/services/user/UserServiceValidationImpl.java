@@ -36,14 +36,14 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     @Transactional
     @Override
-    public User getValidUser(Long userId,
+    public User getValidUser(Long id,
                              String methodName) {
-        User userFound = userRepository.findUserById(userId);
+        User userFound = userRepository.findUserById(id);
         if (userFound == null) {
-            throw new ResourceNotFoundException("User with id " + userId + " not found.");
+            throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
 
-        log.info("User with id {} retrieved. Method: {}", userId, methodName);
+        log.info("User with id {} retrieved. Method: {}", id, methodName);
 
         return userFound;
     }

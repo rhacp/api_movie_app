@@ -1,32 +1,37 @@
 package com.rhacp.movie_app_api.services.user;
 
+import com.rhacp.movie_app_api.exceptions.ResourceAlreadyExistsException;
+import com.rhacp.movie_app_api.exceptions.ResourceNotFoundException;
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 
 public interface UserServiceValidation {
 
     /**
-     * Validates if a user with the same id as the given userDTO exists.
-     * @param userDTO userDTO to get the id from
-     * @exception ResourceAlreadyExists if user exists
+     * Checks if User already exists.
+     *
+     * @param userDTO UserDTO to check.
+     * @throws ResourceAlreadyExistsException if User exists.
      */
     void validateUserAlreadyExists(UserDTO userDTO);
 
     /**
-     * Search for a user with the specified id and returns it.
-     * @param userId Id to check for.
-     * @param methodName methodName.
-     * @return User found user.
-     * @exception ResourceNotFoundException If user not found.
+     * Search for User with the specified id and returns it.
+     *
+     * @param id Id to check for.
+     * @param methodName Caller.
+     * @return User.
+     * @exception ResourceNotFoundException If User not found.
      */
-    User getValidUser(Long userId, String methodName);
+    User getValidUser(Long id, String methodName);
 
     /**
-     * Search for a user with the specified id and returns it.
-     * @param email Email to check for.
-     * @param methodName methodName.
-     * @return User found user.
+     * Identify User by token.
+     *
+     * @param token Token to check for.
+     * @param methodName Caller.
+     * @return User.
      * @exception ResourceNotFoundException If user not found.
      */
-    User getValidUserByToken(String email, String methodName);
+    User getValidUserByToken(String token, String methodName);
 }

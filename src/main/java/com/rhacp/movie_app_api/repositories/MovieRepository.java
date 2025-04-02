@@ -8,12 +8,10 @@ import org.springframework.stereotype.Repository;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     /**
-     * Query to retrieve movie by title from DB.
+     * Retrieve movie by id.
      *
-     * @param movieId Title of the movie.
+     * @param id Title to search for.
      * @return Movie.
      */
-    Movie findMovieByMovieId(Long movieId);
-
     Movie findMovieById(Long id);
 }

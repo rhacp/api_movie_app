@@ -8,6 +8,9 @@ https://trello.com/b/qaXNaswf/movie-app-web-application
 TMDB API used to fetch movies: <br>
 https://www.themoviedb.org/
 
+API documentation: <br>
+https://rhacp.github.io/MAA_Swagger/
+
 ---
 
 ### Run the Project
@@ -27,13 +30,6 @@ https://www.themoviedb.org/
 2. If there is no user present in the database, a new admin will be automatically created with the username `admin@test.com` and password `admin`.
 3. Use the `Generate Token` request along the credentials mentioned above to get an API token.
 4. Test the rest of the API (the other endpoints require the authentication token).
-
----
-
-### API Documentation
-
-Swagger: <br>
-https://rhacp.github.io/MAA_Swagger/
 
 ---
 

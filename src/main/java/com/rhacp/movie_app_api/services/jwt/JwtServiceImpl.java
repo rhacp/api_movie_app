@@ -36,73 +36,25 @@ public class JwtServiceImpl implements JwtService {
         this.authenticationManager = authenticationManager;
     }
 
-    // Generate token with given user name.
     public JwtDTO generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userName);
     }
 
-    // Create a JWT token with specified claims and subject (username).
-    private JwtDTO createToken(Map<String, Object> claims,
-                               String userName) {
-        Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * properties.getTokenLifetime());
-        System.out.println(expiry);
-        JwtBuilder jwtBuilder = Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userName)
-                .setIssuedAt(new Date())
-                .setExpiration(expiry) // Token valid for 30 minutes
-                .signWith(getSignKey(), SignatureAlgorithm.HS256);
-
-        return new JwtDTO(jwtBuilder.compact(), new java.sql.Timestamp(expiry.getTime()).toLocalDateTime());
-    }
-
-    // Get the signing key for JWT token.
-    private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(properties.getSecret());
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    // Extract the username from the token.
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extract the expiration date from the token.
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Extract a claim from the token.
     public <T> T extractClaim(String token,
                               Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Extract all claims from the token.
-    private Claims extractAllClaims(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSignKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (SignatureException e) {
-            throw new CustomSignatureMismatchException("Invalid token.");
-        } catch (ExpiredJwtException e) {
-            throw new CustomExpiredTokenException("Token has expired.");
-        } catch (DecodingException e) {
-            throw new CustomExpiredTokenException("Decoding failed.");
-        }
-    }
-
-    // Check if the token is expired.
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    // Validate the token against user details and expiration.
     public Boolean validateToken(String token,
                                  UserDetails userDetails) {
         final String username = extractUsername(token);
@@ -121,5 +73,67 @@ public class JwtServiceImpl implements JwtService {
 
     public String getAllClaims(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    /**
+     * Create a JWT token with specified claims and subject (username).
+     *
+     * @param claims Map<String, Object>.
+     * @return JwtDTO : token.
+     */
+    private JwtDTO createToken(Map<String, Object> claims,
+                               String userName) {
+        Date expiry = new Date(System.currentTimeMillis() + 1000 * 60 * properties.getTokenLifetime());
+        System.out.println(expiry);
+        JwtBuilder jwtBuilder = Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userName)
+                .setIssuedAt(new Date())
+                .setExpiration(expiry) // Token valid for 30 minutes
+                .signWith(getSignKey(), SignatureAlgorithm.HS256);
+
+        return new JwtDTO(jwtBuilder.compact(), new java.sql.Timestamp(expiry.getTime()).toLocalDateTime());
+    }
+
+    /**
+     * Get the signing key for JWT token.
+     *
+     * @return Key.
+     */
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(properties.getSecret());
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Extract all claims from the token.
+     *
+     * @param token User token.
+     * @return Claim.
+     */
+    private Claims extractAllClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SignatureException e) {
+            throw new CustomSignatureMismatchException("Invalid token.");
+        } catch (ExpiredJwtException e) {
+            throw new CustomExpiredTokenException("Token has expired.");
+        } catch (DecodingException e) {
+            throw new CustomExpiredTokenException("Decoding failed.");
+        }
+    }
+
+    /**
+     * Check if the token is expired.
+     *
+     * @param token User token.
+     * @return Boolean.
+     */
+    private Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
     }
 }
