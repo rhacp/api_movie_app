@@ -36,6 +36,11 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.createReview(reviewInputDTO, token));
     }
 
+    /**
+     * GET endpoint to receive all Reviews.
+     *
+     * @return ResponseEntity.ok : List of ReviewDTO.
+     */
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<ReviewDTO>> getAllReviews() {
@@ -46,7 +51,7 @@ public class ReviewController {
      * GET endpoint to retrieve Review by id.
      *
      * @param id Id of the review.
-     * @return ResponseEntity.ok : ReviewDTO retrieved.
+     * @return ResponseEntity.ok : ReviewDTO.
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
@@ -58,10 +63,10 @@ public class ReviewController {
     /**
      * PUT endpoint to update Review by id.
      *
-     * @param id Id of the review.
+     * @param id Id of the Review to be updated.
      * @param reviewUpdateDTO DTO containing the new info.
      * @param token User token.
-     * @return ResponseEntity.ok : ReviewDTO retrieved.
+     * @return ResponseEntity.ok : updated ReviewDTO.
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")

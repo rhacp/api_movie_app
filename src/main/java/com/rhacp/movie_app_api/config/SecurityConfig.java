@@ -35,14 +35,17 @@ public class SecurityConfig {
 
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    private final CustomCorsConfiguration customCorsConfiguration;
+
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     private static final String ROLE_USER = "ROLE_USER";
 
-    public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter, UserRepository userRepository, CustomAccessDeniedHandler customAccessDeniedHandler) {
+    public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter, UserRepository userRepository, CustomAccessDeniedHandler customAccessDeniedHandler, CustomCorsConfiguration customCorsConfiguration) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userRepository = userRepository;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customCorsConfiguration = customCorsConfiguration;
     }
 
     @Bean
@@ -56,11 +59,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/generateToken").permitAll()
+                        .requestMatchers("/api/v1/searchIndex**").permitAll()
+                        .requestMatchers("/api/v1/movie/**").permitAll()
                         .requestMatchers("/api/v1/users/register").hasAuthority(ROLE_ADMIN)
                         .requestMatchers("/api/v1/users/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-                        .requestMatchers("/api/v1/searchIndex/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/reviews/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
-                        .requestMatchers("/api/v1/movie/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/api/v1/movieList/**").hasAnyAuthority(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/actuator/**").hasAuthority(ROLE_ADMIN)
@@ -68,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs.yaml").permitAll()
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
+                .cors(c -> c.configurationSource(customCorsConfiguration))
                 .exceptionHandling(e->e.accessDeniedHandler(customAccessDeniedHandler))
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
