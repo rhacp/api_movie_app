@@ -46,12 +46,19 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO createReview(ReviewInputDTO reviewInputDTO,
                                   String token) {
-        Review review = modelMapper.map(reviewInputDTO, Review.class);
-
+        Review review = new Review();
+        review.setReviewText(reviewInputDTO.getReviewText());
+        review.setRating(reviewInputDTO.getRating());
         review.setCreationDate(LocalDate.now());
         review.setCreationTime(LocalTime.now().withNano(0));
         review.setReviewUser(userService.getUserByToken(token));
         review.setReviewMovie(movieService.getMovieEntityById(reviewInputDTO.getMovieId()));
+
+        // metoda care modifica rating pentru film
+        movieService.updateMovieRating(review.getReviewMovie(),
+                Float.valueOf(review.getRating()),
+                reviewRepository.findReviewByReviewMovie(review.getReviewMovie()).size(),
+                "createReview");
 
         Review savedReview = reviewRepository.save(review);
         log.info("Review {} inserted. Method: {}.", savedReview.getId(), "createReview");

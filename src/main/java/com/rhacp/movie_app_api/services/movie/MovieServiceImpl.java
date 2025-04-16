@@ -47,18 +47,24 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void saveMovieList(List<Movie> movieList) {
         movieList.forEach(movie -> {
-            Movie retrievedMovie = movieRepository.findMovieById(movie.getMovieId());
+            Movie retrievedMovie = movieRepository.findMovieByMovieId(movie.getMovieId());
             if (retrievedMovie == null) {
+                movie.setRating(0f);
                 Movie savedMovie = movieRepository.save(movie);
                 movie.setId(savedMovie.getId());
             } else {
                 movie.setId(retrievedMovie.getId());
-                movie.setTitle(retrievedMovie.getTitle());
-                movie.setOverview(retrievedMovie.getOverview());
-                movie.setPosterPath(retrievedMovie.getPosterPath());
-                movie.setMovieId(retrievedMovie.getMovieId());
+                movie.setRating(retrievedMovie.getRating());
                 movieRepository.save(movie);
             }
+//            } else {
+//                movie.setId(retrievedMovie.getId());
+//                movie.setTitle(retrievedMovie.getTitle());
+//                movie.setOverview(retrievedMovie.getOverview());
+//                movie.setPosterPath(retrievedMovie.getPosterPath());
+//                movie.setMovieId(retrievedMovie.getMovieId());
+//                movieRepository.save(movie);
+//            }
         });
     }
 
@@ -94,5 +100,14 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getMovieEntityById(Long id) {
         return movieServiceValidation.getValidMovie(id, "getMovieEntityById");
+    }
+
+    @Transactional
+    @Override
+    public void updateMovieRating(Movie movie, Float rating, int count, String methodName) {
+        movie.setRating((movie.getRating() * count + rating)/(count + 1));
+        log.info("Movie {} rating updated. Method: {}", movie.getId(), methodName);
+
+        movieRepository.save(movie);
     }
 }

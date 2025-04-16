@@ -3,8 +3,10 @@ package com.rhacp.movie_app_api.services.user;
 import com.rhacp.movie_app_api.exceptions.CustomForbiddenResourceException;
 import com.rhacp.movie_app_api.models.dtos.user.UserDTO;
 import com.rhacp.movie_app_api.models.dtos.user.UserInputDTO;
+import com.rhacp.movie_app_api.models.entities.Mail;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import com.rhacp.movie_app_api.repositories.UserRepository;
+import com.rhacp.movie_app_api.services.mail.MailService;
 import com.rhacp.movie_app_api.utils.enums.Role;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +33,20 @@ public class UserServiceImpl implements UserService {
 
     private final Properties properties;
 
+    private final MailService mailService;
+
     public UserServiceImpl(UserRepository userRepository,
                            ModelMapper modelMapper,
                            UserServiceValidation userServiceValidation,
                            PasswordEncoder passwordEncoder,
-                           Properties properties) {
+                           Properties properties,
+                           MailService mailService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
         this.passwordEncoder = passwordEncoder;
         this.properties = properties;
+        this.mailService = mailService;
     }
 
     @Transactional
@@ -49,12 +55,17 @@ public class UserServiceImpl implements UserService {
         userServiceValidation.validateUserAlreadyExists(userInputDTO);
 
         User user = modelMapper.map(userInputDTO, User.class);
+        String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreationDate(LocalDate.now());
         user.setCreationTime(LocalTime.now().withNano(0));
 
         User savedUser = userRepository.save(user);
         log.info("User {} inserted in db. Method: {}.", savedUser.getEmail(), "createUser");
+
+        // Send mail
+        Mail mail = mailService.prepareMailCreateUser(savedUser.getEmail(), password, "createUser");
+        mailService.sendMail(savedUser.getEmail(), mail, "createUser");
 
         return modelMapper.map(savedUser, UserDTO.class);
     }

@@ -2,7 +2,6 @@ package com.rhacp.movie_app_api.models.dtos.review;
 
 import com.rhacp.movie_app_api.models.entities.Movie;
 import com.rhacp.movie_app_api.models.entities.user.User;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,9 @@ public class ReviewDTO {
 
     private Long id;
 
-    @NotBlank
     private String reviewText;
+
+    private Integer rating;
 
     private LocalDate creationDate;
 

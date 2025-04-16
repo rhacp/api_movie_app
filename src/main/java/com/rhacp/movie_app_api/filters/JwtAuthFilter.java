@@ -127,6 +127,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 || path.startsWith("/v3/api-docs")
                 || path.equals("/v3/api-docs.yaml")
                 || path.startsWith("/api/v1/searchIndex")
-                || path.startsWith("/api/v1/movie");
+                || path.startsWith("/api/v1/movies/");
     }
 }

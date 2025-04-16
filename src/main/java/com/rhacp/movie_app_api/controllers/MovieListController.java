@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/movieList")
+@RequestMapping("/api/v1/movieLists")
 public class MovieListController {
 
     private final MovieListService movieListService;

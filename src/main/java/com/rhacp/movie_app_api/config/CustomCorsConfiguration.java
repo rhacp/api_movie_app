@@ -1,5 +1,6 @@
 package com.rhacp.movie_app_api.config;
 
+import com.rhacp.movie_app_api.utils.properties.Properties;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
@@ -10,11 +11,17 @@ import java.util.List;
 @Component
 public class CustomCorsConfiguration implements CorsConfigurationSource {
 
+    private final Properties properties;
+
+    public CustomCorsConfiguration(Properties properties) {
+        this.properties = properties;
+    }
+
     @Override
     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:63343"));
+        config.setAllowedOrigins(List.of("http://localhost:8080", "http://127.0.0.1:8080", properties.getFeUrlFirst()));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
 

@@ -1,6 +1,6 @@
 package com.rhacp.movie_app_api.models.dtos.movie_list;
 
-import com.rhacp.movie_app_api.models.entities.Movie;
+import com.rhacp.movie_app_api.models.dtos.MovieDTO;
 import com.rhacp.movie_app_api.models.entities.user.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class MovieListDTO {
     @NotBlank
     private String description;
 
-    private List<Movie> movies = new ArrayList<>();
+    private List<MovieDTO> movies = new ArrayList<>();
 
     private User userMovie;
 }

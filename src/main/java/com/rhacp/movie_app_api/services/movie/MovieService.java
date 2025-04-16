@@ -32,4 +32,6 @@ public interface MovieService {
     Movie removeMovieListAndReturnMovieById(Long id, MovieList movieList);
 
     Movie getMovieEntityById(Long id);
+
+    void updateMovieRating(Movie movie, Float rating, int count, String methodName);
 }

@@ -24,6 +24,9 @@ public class Review {
     @Column(name = "review_text")
     private String reviewText;
 
+    @Column(name = "rating")
+    private Integer rating;
+
     @Column(name = "creation_date")
     private LocalDate creationDate;
 

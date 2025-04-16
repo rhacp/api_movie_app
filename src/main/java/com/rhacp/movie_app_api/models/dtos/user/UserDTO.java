@@ -1,7 +1,7 @@
 package com.rhacp.movie_app_api.models.dtos.user;
 
-import com.rhacp.movie_app_api.models.entities.MovieList;
-import com.rhacp.movie_app_api.models.entities.Review;
+import com.rhacp.movie_app_api.models.dtos.movie_list.MovieListDTO;
+import com.rhacp.movie_app_api.models.dtos.review.ReviewDTO;
 import com.rhacp.movie_app_api.utils.validators.RolePattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -42,7 +42,7 @@ public class UserDTO {
     @RolePattern(anyOf = {"role_user", "role_admin"})
     private String role;
 
-    private List<Review> reviewList = new ArrayList<>();
+    private List<ReviewDTO> reviewList = new ArrayList<>();
 
-    private List<MovieList> listMovieList = new ArrayList<>();
+    private List<MovieListDTO> listMovieList = new ArrayList<>();
 }

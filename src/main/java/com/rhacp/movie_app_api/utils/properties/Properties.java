@@ -45,4 +45,7 @@ public class Properties {
 
     @Value("${fa.password}")
     private String faPassword;
+
+    @Value("${spring.mail.username}")
+    private String senderAddress;
 }

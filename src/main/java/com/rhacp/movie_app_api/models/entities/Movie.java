@@ -31,6 +31,9 @@ public class Movie {
     @Column(name = "poster_path")
     private String posterPath;
 
+    @Column(name = "rating")
+    private Float rating;
+
     @Column(name = "movie_id")
     private Long movieId;
 
